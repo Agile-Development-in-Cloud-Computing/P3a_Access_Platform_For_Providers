@@ -16,3 +16,11 @@ Provide a more detailed overview of your project. Explain its purpose, key featu
 ## Team Members
 
 ## Important Notes
+
+## Meeting-Plans
+### Sprint 1- Week 1
+### Sprint 1- Week 2
+### Sprint 2- Week 1
+### Sprint 2- Week 2
+### Sprint 3- Week 1
+### Sprint 3- Week 2
