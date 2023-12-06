@@ -1,37 +1,3 @@
-# Access Platform for Providers (APP)
-
-## Table of Contents
-
-- [Architecture](docs/architecture.md)
-- [Usage](docs/usage.md)
-- [Deployment](docs/deployment.md)
-- [API Reference](docs/api-reference.md)
-
-
-
-
-
-
-
-
-
-
-1. [Overview](#overview)
-2. [Team Members](#team-members)
-3. [Important Notes](#important-notes)
-4. [Meeting Plans](#meeting-plans)
-
-## Overview
-
-The Access Platform for Providers (APP) project create a comprehensive platform that facilitates interactions between users and providers in the system. Leveraging the Authentication Component for secure access, APP provides a user-friendly interface for both User and Provider Admin roles.
-
-Users can log in securely using the Authentication Component, ensuring a reliable authentication process. Provider Admins, with appropriate permissions granted by the Administrator, can manage provider credentials and configure user management within their organization.
-
-## Team Members
-
-## Important Notes
-
-## Meeting Plans
 
 #### Sprint 1
 
