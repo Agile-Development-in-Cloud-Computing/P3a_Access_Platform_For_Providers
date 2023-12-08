@@ -89,5 +89,49 @@ Shiva is assigned to document discussions and collaborate with Sahith in explori
 
 **Duration: 22 minutes**
 
+#### Sprint 2
 
+**Week 3 - 1 :**
+
+1. **Database Completion and UI/UX Progress:**
+   - Ankush worked on the database component of the project has been completed, and the UI/UX parts are nearly finished, with some minor adjustments pending.
+
+2. **Workflow Planning for the Coming Weeks:**
+   - Discussed the workflow for the upcoming weeks to ensure a smooth progression of the project.
+
+3. **Exploration of Web2py Tool:**
+   - Faiz explored the Web2py tool, which is Python-based, and is in the process of preparing a demo for its potential application.
+
+4. **Discussion on Cloud-Based Platforms:**
+   - Shiva engaged in discussions with seniors to gather details about cloud-based platforms, specifically exploring the potential use of Netlify.
+
+5. **Focus on Component Building in December:**
+   - The team will be concentrating on building components throughout the month of December.
+
+6. **Kanban Board Improvement:**
+   - Anil has been assigned the task of improving the Kanban board for enhanced project management.
+
+7. **Roadmap Preparation:**
+   - Sahith is actively working on preparing the roadmap for the project.
+
+**Duration: 30 minutes**
+
+**Week 3 - 2 :**
+
+1. **Insights on Web2py Framework:**
+   - Faiz explained the Web2py framework, covering its key features, architecture, and functionalities.
+
+2. **Overview of Project Flow:**
+   - Ankush provided a comprehensive overview of the project's flow, detailing the sequence of tasks, dependencies, and milestones.
+
+3. **Documentation Update Requirement:**
+   - Shiva is tasked with updating project documentation, which includes revising existing documents and incorporating new information into the project records.
+
+4. **Task on Kanban ID Section:**
+   - Anil emphasized the need to cross-check the Kanban ID section for accuracy and completeness.
+
+5. **Flowchart Development:**
+   - Sahith is responsible for creating a flowchart that illustrates the project's workflow or a specific process.
+   
+**Duration: 53 minutes**
 
