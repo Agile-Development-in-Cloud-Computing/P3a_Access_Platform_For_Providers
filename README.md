@@ -1,8 +1,20 @@
-# Project Name
-
-Brief description or introduction to your project.
+# Access Platform for Providers (APP)
 
 ## Table of Contents
+
+- [Architecture](docs/architecture.md)
+- [Usage](docs/usage.md)
+- [Deployment](docs/deployment.md)
+- [API Reference](docs/api-reference.md)
+
+
+
+
+
+
+
+
+
 
 1. [Overview](#overview)
 2. [Team Members](#team-members)
@@ -11,7 +23,9 @@ Brief description or introduction to your project.
 
 ## Overview
 
-Provide a more detailed overview of your project. Explain its purpose, key features, and any important information.
+The Access Platform for Providers (APP) project create a comprehensive platform that facilitates interactions between users and providers in the system. Leveraging the Authentication Component for secure access, APP provides a user-friendly interface for both User and Provider Admin roles.
+
+Users can log in securely using the Authentication Component, ensuring a reliable authentication process. Provider Admins, with appropriate permissions granted by the Administrator, can manage provider credentials and configure user management within their organization.
 
 ## Team Members
 
@@ -77,7 +91,7 @@ Shiva is assigned to document discussions and collaborate with Sahith in explori
 
 #### Sprint 2
 
-**Week 3 - 1 :**
+**Week 1 :**
 
 1. **Database Completion and UI/UX Progress:**
    - Ankush worked on the database component of the project has been completed, and the UI/UX parts are nearly finished, with some minor adjustments pending.
@@ -102,7 +116,7 @@ Shiva is assigned to document discussions and collaborate with Sahith in explori
 
 **Duration: 30 minutes**
 
-**Week 3 - 2 :**
+**Week 2 :**
 
 1. **Insights on Web2py Framework:**
    - Faiz explained the Web2py framework, covering its key features, architecture, and functionalities.
@@ -121,3 +135,38 @@ Shiva is assigned to document discussions and collaborate with Sahith in explori
    
 **Duration: 53 minutes**
 
+#### Sprint 3
+
+**Week 1 -1 :**
+
+1. **Web2py Live Demo:**
+   - Conducted a live demonstration of the web2py framework, led by Faiz.
+   - Demonstrated key features and functionalities to enhance team understanding.
+
+2. **Collaboration Outreach:**
+   - Ankush took proactive steps to foster collaboration by sending emails to other teams.
+   - Discussed the draft roadmap with Sahith and gathered valuable input for refinement.
+   
+**Duration: 15 minutes**
+
+ **Week 1 -2 :** 
+
+1. **Start Developments for Providers:**
+   - Faiz, Shiva, Sahith initiated the development process for providers.
+
+2. **Basic Functionality Check and Team Clarity:**
+   - Ankush took the lead in checking on the basic functionality of Master Agreement, Service Request, and Bidding.
+   - Provided clarity to the team regarding these essential aspects.
+
+3. **Database Clarity and Agreement:**
+   - All team members actively worked on achieving clarity and consensus on the database structure.
+   - Collaborated with other groups to ensure agreement and coherence.
+
+4. **Update Documentation:**
+   - Shiva took responsibility for documentation tasks.
+   - Anil focused on updating Kanban labels and GitHub README enhancement for better project management.
+
+5. **Flowchart Development:**
+      - Sahith is responsible for creating a flowchart that illustrates the project's workflow or a specific process.
+
+**Duration: 25 minutes**
