@@ -156,3 +156,131 @@ if configuration.get('scheduler.enabled'):
 db.define_table('university',
                 Field('name', 'string', required=IS_NOT_EMPTY()),
                 Field('ranking', 'integer'))
+
+# Define web2py models
+
+# contract table
+db.define_table(
+    'contract',
+    Field('UserOfferID', 'integer', 'reference useroffer'),
+    Field('ContractDate', 'datetime'),
+    Field('Status', 'string', length=50),
+    migrate=False
+)
+
+# evaluation table
+db.define_table(
+    'evaluation',
+    Field('UserID', 'integer', 'reference p_user'),
+    Field('ProviderID', 'integer', 'reference provider'),
+    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
+    Field('Rating', 'integer'),
+    Field('Comments', 'text'),
+    migrate=False
+)
+
+# masteragreementtype table
+db.define_table(
+    'masteragreementtype',
+    Field('Name', 'string', length=255),
+    Field('ValidFrom', 'date'),
+    Field('ValidUntil', 'date'),
+    Field('DailyRateIndicator', 'boolean'),
+    Field('Deadline', 'date'),
+    Field('TeamDeadline', 'date'),
+    Field('WorksContractDeadline', 'date'),
+    Field('GroupID', 'integer', 'reference pgroup'),
+    migrate=False
+)
+
+# negotiation table
+db.define_table(
+    'negotiation',
+    Field('UserOfferID', 'integer', 'reference useroffer'),
+    Field('ProposedPrice', 'decimal(10,2)'),
+    Field('NegotiatedPrice', 'decimal(10,2)'),
+    Field('Status', 'string', length=50),
+    migrate=False
+)
+
+# offer table
+db.define_table(
+    'offer',
+    Field('ProviderID', 'integer', 'reference provider'),
+    Field('AgreementTypeID', 'integer', 'reference masteragreementtype'),
+    Field('OfferDate', 'datetime'),
+    Field('Status', 'string', length=50),
+    migrate=False
+)
+
+# pgroup table
+db.define_table(
+    'pgroup',
+    Field('Name', 'string', length=255),
+    Field('Description', 'text'),
+    migrate=False
+)
+
+# provider table
+db.define_table(
+    'provider',
+    Field('Name', 'string', length=255),
+    Field('Address', 'string', length=255),
+    Field('ExistenceSince', 'date'),
+    Field('ValidFrom', 'date'),
+    Field('ValidUntil', 'date'),
+    migrate=False
+)
+
+# requestcycle table
+db.define_table(
+    'requestcycle',
+    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
+    Field('CycleNumber', 'integer'),
+    Field('Status', 'string', length=50),
+    migrate=False
+)
+
+# servicerequest table
+db.define_table(
+    'servicerequest',
+    Field('UserID', 'integer', 'reference p_user'),
+    Field('RequestType', 'string', length=50),
+    Field('SkillLevels', 'string', length=255),
+    Field('ExpertiseLevel', 'string', length=255),
+    Field('Role', 'string', length=50),
+    Field('Status', 'string', length=50),
+    migrate=False
+)
+
+# user table
+db.define_table(
+    'p_user',
+    Field('Username', 'string', length=255),
+    Field('Password', 'string', length=255),
+    Field('Email', 'string', length=255),
+    Field('Role', 'string', length=50),
+    Field('RegistrationDate', 'datetime'),
+    Field('LastLoginDate', 'datetime'),
+    Field('IsActive', 'boolean'),
+    migrate=False
+)
+
+# useroffer table
+db.define_table(
+    'useroffer',
+    Field('UserID', 'integer', 'reference p_user'),
+    Field('OfferID', 'integer', 'reference offer'),
+    Field('IsChosen', 'boolean'),
+    Field('IsAccepted', 'boolean'),
+    migrate=False
+)
+
+# userprofile table
+db.define_table(
+    'userprofile',
+    Field('UserID', 'integer', 'reference p_user'),
+    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
+    Field('ProfileData', 'text'),
+    migrate=False
+)
