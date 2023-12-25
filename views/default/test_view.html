@@ -1,6 +1,114 @@
 {{extend 'layout.html'}}
-{{=myText}}
-{{=form_2}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      max-width: 300px;
+      margin: 10px; /* Add margin for spacing between cards */
+      text-align: center;
+      font-family: arial;
+    }
 
-<a href="test_view?para=35">click</a>
-{{=new_value}}
+    /* Add a container for the cards to ensure they wrap properly */
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .title {
+      color: grey;
+      font-size: 18px;
+    }
+
+    button {
+      border: none;
+      outline: 0;
+      display: inline-block;
+      padding: 8px;
+      color: white;
+      background-color: #000;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      font-size: 18px;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 22px;
+      color: black;
+    }
+
+    button:hover,
+    a:hover {
+      opacity: 0.7;
+    }
+  </style>
+
+
+
+<div class="card-container">
+<div class="card">
+  <img src="{{=URL('static', 'images')}}/ankush.jpg" alt="Ankush" style="width:100%">
+  <h1>Ankush Laxman Patil</h1>
+  <p class="title">Role Name</p>
+  <div style="margin: 24px 0;">
+    <p>Matriculation Number: 1448072 </p>
+    <a href="https://www.linkedin.com/in/ankushpatil22/"><i class="fa fa-linkedin"></i></a>
+    <a href="mailto:ankush.patil@stud.fra-uas.de"><i class="fa fa-envelope"></i></a>
+    <a href="https://github.com/ankush-patil22"><i class="fa fa-github"></i></a>
+  </div>
+
+</div>
+
+<div class="card">
+  <img src="{{=URL('static', 'images')}}/faizkhan.jpeg" alt="Faiz" style="width:100%">
+  <h1>Faiz Mohammed Khan</h1>
+  <p class="title">Role Name</p>
+  <div style="margin: 24px 0;">
+    <p>Matriculation Number: 1427310 </p>
+    <a href="https://www.linkedin.com/in/faizmohammedkhan/"><i class="fa fa-linkedin"></i></a>
+    <a href="mailto:faiz.khan@stud.fra-uas.de"><i class="fa fa-envelope"></i></a>
+    <a href="https://github.com/faizmohammedkhan7"><i class="fa fa-github"></i></a>
+  </div>
+</div>
+
+<div class="card">
+  <img src="{{=URL('static', 'images')}}/sahith.jpg" alt="Sahith" style="width:100%">
+  <h1>Sahith Kumar Singari</h1>
+  <p class="title">Role Name</p>
+  <div style="margin: 24px 0;">
+    <p>Matriculation Number: 1446809 </p>
+    <a href="https://www.linkedin.com/in/sahithkumar/"><i class="fa fa-linkedin"></i></a>
+    <a href="mailto:sahith.singari@stud.fra-uas.de"><i class="fa fa-envelope"></i></a>
+    <a href="https://github.com/sahithkumar1999"><i class="fa fa-github"></i></a>
+  </div>
+</div>
+
+<div class="card">
+  <img src="{{=URL('static', 'images')}}/shiva.jpg" alt="shiva" style="width:100%">
+  <h1>Shiva Kumar Biru</h1>
+  <p class="title">Role Name</p>
+  <div style="margin: 24px 0;">
+    <p>Matriculation Number: 1436929 </p>
+    <a href="https://www.linkedin.com/in/shiva-kumar-biru-9aa099200/"><i class="fa fa-linkedin"></i></a>
+    <a href="mailto:shiva.biru@stud.fra-uas.de"><i class="fa fa-envelope"></i></a>
+    <a href="https://github.com/shiva-kumar-biru"><i class="fa fa-github"></i></a>
+  </div>
+</div>
+
+<div class="card">
+  <img src="{{=URL('static', 'images')}}/anilkumar.jpg" alt="Anil" style="width:100%">
+  <h1>Anil Kumar Gadiraju</h1>
+  <p class="title">Role Name</p>
+  <div style="margin: 24px 0;">
+    <p>Matriculation Number: 1428607 </p>
+    <a href="https://www.linkedin.com/in/anil-kumar-gadiraju-8bb484154/"><i class="fa fa-linkedin"></i></a>
+    <a href="mailto:anil.gadiraju@stud.fra-uas.de"><i class="fa fa-envelope"></i></a>
+    <a href="https://github.com/anilkumargadirajuFraUas"><i class="fa fa-github"></i></a>
+  </div>
+</div>
+
+
+</div>
