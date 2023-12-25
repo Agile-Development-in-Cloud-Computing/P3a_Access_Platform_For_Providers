@@ -96,3 +96,7 @@ def provider_admin():
     roles = 3
 
     return dict(total_users=total_users, providers=providers, admin=admin, roles=roles)
+
+def test_view():
+
+    return dict()
