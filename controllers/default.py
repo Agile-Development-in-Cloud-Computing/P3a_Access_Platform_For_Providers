@@ -104,6 +104,7 @@ def Team():
 def About():
     return dict()
 
+
 def team():
     response.view = 'default/Base_FrameWork.html'
     return dict()
@@ -120,3 +121,4 @@ def basic_page_layout():
 
 def basic_page():
     return dict()
+
