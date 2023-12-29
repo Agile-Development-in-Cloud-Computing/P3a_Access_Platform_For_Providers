@@ -97,10 +97,16 @@ def provider_admin():
 
     return dict(total_users=total_users, providers=providers, admin=admin, roles=roles)
 
-def test_view():
+def Team():
 
     return dict()
 
+def About():
+    return dict()
+
+def team():
+    response.view = 'default/Base_FrameWork.html'
+    return dict()
 def providerpage():
     response.view='default/provider_layout.html'
     return dict()
