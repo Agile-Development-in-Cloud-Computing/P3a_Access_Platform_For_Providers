@@ -100,3 +100,17 @@ def provider_admin():
 def test_view():
 
     return dict()
+
+def providerpage():
+    response.view='default/provider_layout.html'
+    return dict()
+
+def page():
+    return dict()
+
+def basic_page_layout():
+    response.view='default/basic_layout.html'
+    return dict()
+
+def basic_page():
+    return dict()
