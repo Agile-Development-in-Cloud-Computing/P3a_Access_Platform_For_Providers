@@ -120,25 +120,37 @@ def login():
     )
 
     if form.process().accepted:
-        # Check credentials and log in the user
-        # For simplicity, you may use the built-in Auth system in Web2py
-
         # Example: Check credentials against a database
-        user = db(db.auth_user.username == form.vars.username).select().first()
-        if user and user.password == form.vars.password:
-            # Log in the user (you may use Web2py Auth system)
-            auth.login_user(user)
-            redirect(URL('dashboard'))  # Redirect to dashboard after successful login
+        user = db(db.p_user.Username == form.vars.username).select().first()
+        if user and user.Password == form.vars.password:
+            session.username=user.Username
+            redirect(URL('user_dashboard'))  # Redirect to dashboard after successful login
 
         response.flash = 'Invalid credentials'
 
     return dict(form=form)
 
+def logout():
+    session.username=None
+    redirect(URL('WelCome'))
+
 def user_dashboard():
-    return dict()
+    form = SQLFORM.factory(
+        Field('first_name', 'string'),
+        Field('last_name', 'string'),
+        Field('email', 'string'),
+        Field('master_agreement', requires=IS_IN_SET([])),
+        Field('role', requires=IS_IN_SET(['admin', 'basic_user'])),
+        Field('password', 'string'),
+        Field('confirm_password', 'string')
+    )
+
+    grid = SQLFORM.grid(db.p_user, user_signature=False)
+    return dict(form=form, grid=grid)
 
 def domain():
     return dict()
+
 
 def positions():
     return dict()

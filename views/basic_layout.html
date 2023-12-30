@@ -81,10 +81,12 @@
    <div class="navbar-collapse collapse w-100 d-flex justify-content-end" id="navbarNavDropdown2">
  
     <div style="justify-content: flex-end; align-items: center; gap: 42px; display: flex; margin-right: 20px;">
-    <a href="your_login_page" class="btn-like-link1" style="color: #EEBC9A; font-size: 18px; font-family: Montserrat; font-weight: 700; text-decoration: none;">
-    Username
+    <a class="btn-like-link1" style="color: #EEBC9A; font-size: 18px; font-family: Montserrat; font-weight: 700; text-decoration: none;">
+    {{if session.username:}}
+        {{=session.username}}
+        {{pass}}
 </a>
-    <a href="your_register_page" class="btn-like-link1" style="color: #8a0707; font-size: 18px; font-family: Montserrat; font-weight: 700; text-decoration: underline; word-wrap: break-word;">
+    <a onclick="return confirm('Are you sure you want to logout ?')" href="{{=URL('default', 'logout')}}" class="btn-like-link1" style="color: #8a0707; font-size: 18px; font-family: Montserrat; font-weight: 700; text-decoration: underline; word-wrap: break-word;">
     Logout
 </a>
 </div>
