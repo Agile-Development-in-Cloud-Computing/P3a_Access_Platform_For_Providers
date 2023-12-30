@@ -134,16 +134,16 @@ def login():
 
     return dict(form=form)
 
+def user_dashboard():
+    return dict()
+
+def domain():
+    return dict()
+
+def positions():
+    return dict()
+
 def providerpage():
     response.view='default/provider_layout.html'
     return dict()
- 
-def page():
-    return dict()
- 
-def basic_page_layout():
-    response.view='default/basic_layout.html'
-    return dict()
- 
-def basic_page():
-    return dict()
+
