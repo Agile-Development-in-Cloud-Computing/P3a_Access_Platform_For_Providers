@@ -108,6 +108,32 @@ def team():
     response.view = 'default/Base_FrameWork.html'
     return dict()
 
+
+def WelCome():
+    return dict()
+
+def login():
+    # Your login logic goes here
+    form = SQLFORM.factory(
+        Field('username', requires=IS_NOT_EMPTY()),
+        Field('password', 'password', requires=IS_NOT_EMPTY())
+    )
+
+    if form.process().accepted:
+        # Check credentials and log in the user
+        # For simplicity, you may use the built-in Auth system in Web2py
+
+        # Example: Check credentials against a database
+        user = db(db.auth_user.username == form.vars.username).select().first()
+        if user and user.password == form.vars.password:
+            # Log in the user (you may use Web2py Auth system)
+            auth.login_user(user)
+            redirect(URL('dashboard'))  # Redirect to dashboard after successful login
+
+        response.flash = 'Invalid credentials'
+
+    return dict(form=form)
+
 def providerpage():
     response.view='default/provider_layout.html'
     return dict()
