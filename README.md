@@ -170,3 +170,40 @@ Shiva is assigned to document discussions and collaborate with Sahith in explori
       - Sahith is responsible for creating a flowchart that illustrates the project's workflow or a specific process.
 
 **Duration: 25 minutes**
+
+**Week 2 :**
+
+1. **UI/UX Design :**
+      - Ankush is actively engaged in the design of the UI/UX, focusing on creating an intuitive and aesthetically pleasing user interface for the project.
+
+2. **Roadmap Completion :**
+      - Sahith has successfully completed the roadmap for the project, outlining a comprehensive strategy and key milestones for guiding the project's future direction.
+
+3. **Kanban Board Enhancement :**
+      - Anil has completed work on enhancing the Kanban board, significantly improving project management and organizational efficiency through refined labeling and tracking systems.
+
+4. **Backend Development :**
+      - Faiz is currently working on the backend development of the project, focusing on building robust and scalable technical infrastructure.
+
+5. **Project Documentation :**
+      - Shiva is engaged in documenting the project's developments and deployments, ensuring thorough record-keeping and transparency throughout the project lifecycle.
+
+**Duration: 27 minutes**
+
+#### Sprint 4
+
+**Week 1 :** 
+
+1. **UI/UX Completion and Collaboration :**-
+      - Ankush has successfully completed the UI/UX part of the project. He is now actively collaborating with other teams, focusing on effective communication to integrate the UI/UX with other project components.
+
+2. **Data Development :**
+      - Faiz is currently engaged in developing the data aspects of the project, working on structuring and managing the data efficiently to support the project's backend needs.
+
+3. **Web Page Development :**
+      - Shiva and Sahith have teamed up to work on the web page development, focusing on creating and enhancing web pages asper designs , that are integral to the project's online presence and functionality.
+
+4. **Exploring PythonAnywhere :**
+      - Anil is exploring PythonAnywhere as a potential solution to enhance the project's database capabilities for futhur sharing the data.
+
+**Duration: 36 minutes**
