@@ -108,6 +108,7 @@ def team():
     response.view = 'default/Base_FrameWork.html'
     return dict()
 
+
 def WelCome():
     return dict()
 
@@ -132,3 +133,17 @@ def login():
         response.flash = 'Invalid credentials'
 
     return dict(form=form)
+
+def providerpage():
+    response.view='default/provider_layout.html'
+    return dict()
+ 
+def page():
+    return dict()
+ 
+def basic_page_layout():
+    response.view='default/basic_layout.html'
+    return dict()
+ 
+def basic_page():
+    return dict()
