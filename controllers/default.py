@@ -135,6 +135,10 @@ def logout():
     redirect(URL('WelCome'))
 
 def user_dashboard():
+
+    super_admin_count = db(db.p_user.Role=='SuperAdmin').count()
+    admin_count = db(db.p_user.Role=='Admin').count()
+    basic_user_count = db(db.p_user.Role=='BasicUser').count()
     form = SQLFORM.factory(
         Field('first_name', 'string'),
         Field('last_name', 'string'),
@@ -146,7 +150,7 @@ def user_dashboard():
     )
 
     grid = SQLFORM.grid(db.p_user, user_signature=False)
-    return dict(form=form, grid=grid)
+    return dict(form=form, grid=grid, super_admin_count=super_admin_count, admin_count=admin_count, basic_user_count=basic_user_count)
 
 def domain():
     return dict()

@@ -1,14 +1,11 @@
 {{extend 'basic_layout.html'}}
+{{include 'components/user_dashboard_component.html'}}
 <div class="container">
 
-
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+ <!--Button trigger modal -->
+<!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
   Add User
-</button>
-
-
+</button>-->
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -30,4 +27,7 @@
   </div>
 </div>
 </div>
+<br/>
+<div class="mx-auto" style="background-color:white; width:90%; padding:40px;">
   {{=grid}}
+</div>
