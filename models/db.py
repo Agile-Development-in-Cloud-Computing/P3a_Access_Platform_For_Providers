@@ -84,15 +84,23 @@ response.form_label_separator = ''
 # - old style crud actions
 # (more options discussed in gluon/tools.py)
 # -------------------------------------------------------------------------
-
+#
+db.define_table(
+    'master_aggr',
+    Field('ma_id', 'string'),
+    Field('provider_name')
+)
 # host names must be a list of allowed host names (glob syntax allowed)
 auth = Auth(db, host_names=configuration.get('host.names'))
 
 # -------------------------------------------------------------------------
 # create all tables needed by auth, maybe add a list of extra fields
 # -------------------------------------------------------------------------
-auth.settings.extra_fields['auth_user'] = []
-auth.define_tables(username=False, signature=False)
+auth.settings.extra_fields['auth_user'] = [
+    Field('Role', requires=IS_IN_SET(['SuperAdmin', 'Admin', 'BasicUser'])),
+    Field('ma_id', 'reference master_aggr'),
+]
+auth.define_tables(username=True, signature=False)
 
 # -------------------------------------------------------------------------
 # configure email
@@ -164,8 +172,7 @@ db.define_table(
     'contract',
     Field('UserOfferID', 'integer', 'reference useroffer'),
     Field('ContractDate', 'datetime'),
-    Field('Status', 'string', length=50),
-    migrate=False
+    Field('Status', 'string', length=50)
 )
 
 # evaluation table
@@ -175,8 +182,7 @@ db.define_table(
     Field('ProviderID', 'integer', 'reference provider'),
     Field('ServiceRequestID', 'integer', 'reference servicerequest'),
     Field('Rating', 'integer'),
-    Field('Comments', 'text'),
-    migrate=False
+    Field('Comments', 'text')
 )
 
 # masteragreementtype table
@@ -189,8 +195,7 @@ db.define_table(
     Field('Deadline', 'date'),
     Field('TeamDeadline', 'date'),
     Field('WorksContractDeadline', 'date'),
-    Field('GroupID', 'integer', 'reference pgroup'),
-    migrate=False
+    Field('GroupID', 'integer', 'reference pgroup')
 )
 
 # negotiation table
@@ -199,8 +204,7 @@ db.define_table(
     Field('UserOfferID', 'integer', 'reference useroffer'),
     Field('ProposedPrice', 'decimal(10,2)'),
     Field('NegotiatedPrice', 'decimal(10,2)'),
-    Field('Status', 'string', length=50),
-    migrate=False
+    Field('Status', 'string', length=50)
 )
 
 # offer table
@@ -209,16 +213,14 @@ db.define_table(
     Field('ProviderID', 'integer', 'reference provider'),
     Field('AgreementTypeID', 'integer', 'reference masteragreementtype'),
     Field('OfferDate', 'datetime'),
-    Field('Status', 'string', length=50),
-    migrate=False
+    Field('Status', 'string', length=50)
 )
 
 # pgroup table
 db.define_table(
     'pgroup',
     Field('Name', 'string', length=255),
-    Field('Description', 'text'),
-    migrate=False
+    Field('Description', 'text')
 )
 
 # provider table
@@ -228,8 +230,7 @@ db.define_table(
     Field('Address', 'string', length=255),
     Field('ExistenceSince', 'date'),
     Field('ValidFrom', 'date'),
-    Field('ValidUntil', 'date'),
-    migrate=False
+    Field('ValidUntil', 'date')
 )
 
 # requestcycle table
@@ -237,8 +238,7 @@ db.define_table(
     'requestcycle',
     Field('ServiceRequestID', 'integer', 'reference servicerequest'),
     Field('CycleNumber', 'integer'),
-    Field('Status', 'string', length=50),
-    migrate=False
+    Field('Status', 'string', length=50)
 )
 
 # servicerequest table
@@ -249,22 +249,24 @@ db.define_table(
     Field('SkillLevels', 'string', length=255),
     Field('ExpertiseLevel', 'string', length=255),
     Field('Role', 'string', length=50),
-    Field('Status', 'string', length=50),
-    migrate=False
+    Field('Status', 'string', length=50)
 )
 
 # user table
 db.define_table(
     'p_user',
     Field('Username', 'string', length=255),
-    Field('Password', 'string', length=255),
+    Field('first_name', 'string', length=255),
+    Field('last_name', 'string', length=255),
+    Field('Password', 'password'),
     Field('Email', 'string', length=255),
-    Field('Role', 'string', length=50),
+    Field('Role', requires=IS_IN_SET(['SuperAdmin', 'Admin', 'BasicUser'])),
     Field('RegistrationDate', 'datetime'),
+    Field('ma_id', 'reference master_aggr'),
     Field('LastLoginDate', 'datetime'),
-    Field('IsActive', 'boolean'),
-    migrate=False
+    Field('IsActive', 'boolean')
 )
+
 
 # useroffer table
 db.define_table(
@@ -272,15 +274,13 @@ db.define_table(
     Field('UserID', 'integer', 'reference p_user'),
     Field('OfferID', 'integer', 'reference offer'),
     Field('IsChosen', 'boolean'),
-    Field('IsAccepted', 'boolean'),
-    migrate=False
+    Field('IsAccepted', 'boolean')
 )
 
 # userprofile table
 db.define_table(
     'userprofile',
     Field('UserID', 'integer', 'reference p_user'),
-    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
-    Field('ProfileData', 'text'),
-    migrate=False
+    Field('ServiceRequestID', 'integer', 'reference  '),
+    Field('ProfileData', 'text')
 )
