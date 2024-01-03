@@ -115,20 +115,21 @@ def WelCome():
 def login():
     # Your login logic goes here
     form = SQLFORM.factory(
-        Field('username', requires=IS_NOT_EMPTY()),
+        Field('Email', 'string', requires=IS_NOT_EMPTY()),
         Field('password', 'password', requires=IS_NOT_EMPTY())
     )
 
     if form.process().accepted:
         # Example: Check credentials against a database
-        user = db(db.p_user.Username == form.vars.username).select().first()
+        user = db(db.p_user.Email == form.vars.Email).select().first()
         if user and user.Password == form.vars.password:
-            session.username=user.Username
+            session.username = user.Email  # Use 'Email' instead of 'Username'
             redirect(URL('user_dashboard'))  # Redirect to dashboard after successful login
 
         response.flash = 'Invalid credentials'
 
     return dict(form=form)
+
 
 def logout():
     session.username=None
