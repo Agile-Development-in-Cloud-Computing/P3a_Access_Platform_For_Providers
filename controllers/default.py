@@ -110,7 +110,12 @@ def logout():
     redirect(URL('WelCome'))
 
 def user_dashboard():
-
+    if access.is_superAdmin():
+        grid = SQLFORM.grid(db.p_user, user_signature=False)
+    elif access.isAdmin():
+        grid = SQLFORM.grid((db.p_user.Role=='Admin') | (db.p_user.Role=='BasicUser'), user_signature=False)
+    else:
+        redirect(URL('domain'))
     super_admin_count = db(db.p_user.Role=='SuperAdmin').count()
     admin_count = db(db.p_user.Role=='Admin').count()
     basic_user_count = db(db.p_user.Role=='BasicUser').count()
@@ -124,10 +129,7 @@ def user_dashboard():
         Field('confirm_password', 'string')
     )
     fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name]
-    if access.is_superAdmin():
-        grid = SQLFORM.grid(db.p_user, user_signature=False)
-    elif access.isAdmin():
-        grid = SQLFORM.grid((db.p_user.Role=='Admin') | (db.p_user.Role=='BasicUser'), user_signature=False)
+
     return dict(form=form, grid=grid, super_admin_count=super_admin_count, admin_count=admin_count,
                 basic_user_count=basic_user_count, access=access)
 
