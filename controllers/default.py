@@ -100,7 +100,7 @@ def user_dashboard():
         Field('password', 'string'),
         Field('confirm_password', 'string')
     )
-
+    fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name]
     grid = SQLFORM.grid(db.p_user, user_signature=False)
     return dict(form=form, grid=grid, super_admin_count=super_admin_count, admin_count=admin_count, basic_user_count=basic_user_count)
 

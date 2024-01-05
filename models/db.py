@@ -6,7 +6,7 @@
 # -------------------------------------------------------------------------
 from gluon.contrib.appconfig import AppConfig
 from gluon.tools import Auth
-
+from datetime import datetime
 # -------------------------------------------------------------------------
 # This scaffolding model makes your app work on Google App Engine too
 # File is released under public domain and you can use without limitations
@@ -255,18 +255,29 @@ db.define_table(
 # user table
 db.define_table(
     'p_user',
-    Field('Username', 'string', length=255),
-    Field('first_name', 'string', length=255),
+    Field('Username', 'string', length=255, requires=IS_NOT_EMPTY()),
+    Field('first_name', 'string', length=255, requires=IS_NOT_EMPTY()),
     Field('last_name', 'string', length=255),
-    Field('Password', 'password'),
-    Field('Email', 'string', length=255),
+    Field('Password', 'password', requires=IS_NOT_EMPTY()),
+    Field('Email', 'string', length=255, requires=IS_NOT_EMPTY()),
     Field('Role', requires=IS_IN_SET(['SuperAdmin', 'Admin', 'BasicUser'])),
-    Field('RegistrationDate', 'datetime'),
+    Field('RegistrationDate', 'datetime', default=datetime.now()),
     Field('ma_id', 'reference master_aggr'),
     Field('LastLoginDate', 'datetime'),
-    Field('IsActive', 'boolean')
+    Field('IsActive', 'boolean', default=True)
 )
 
+if db(db.p_user).count()==0:
+    db.p_user.insert(Username='fkhan', first_name='Faiz', last_name='Khan', password='faiz@123',
+                     Email='faiz.khan@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='apatil', first_name='Ankush', last_name='Patil', password='ankush@123',
+                     Email='ankush.patil@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='ssingari', first_name='Sahith', last_name='Singari', password='sahith@123',
+                     Email='sahith.singari@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='sbiru', first_name='Shiva', last_name='Biru', password='shiva@123',
+                     Email='shiva.biru@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='agadiraju', first_name='Anil', last_name='Gadiraju', password='anil@123',
+                     Email='anil.gadiraju@stud.fra-uas.de', Role='SuperAdmin')
 
 # useroffer table
 db.define_table(
