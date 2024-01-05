@@ -1,10 +1,12 @@
 <div class="mx-auto" style="left: 83px; right: 77px; bottom: 492px; top: 85px; background: #CED9E2; padding: 20px; width:90%;">
     User Dashboard
     <div style="display: flex; justify-content: space-around;">
+        {{if access.is_superAdmin():}}
         <div style="width: 340px; height: 120px; background-color: #ffffff; border-radius: 5px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
             <h1 style="color:green;">{{=super_admin_count}}</h1>
             <span style="padding-bottom: 10px;">Super Admin</span>
         </div>
+        {{pass}}
         <div style="width: 340px; height: 120px; background-color: #ffffff; border-radius: 5px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
             <h1 style="color:green;">{{=admin_count}}</h1>
             <span style="padding-bottom: 10px;">Admin</span>

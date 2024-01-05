@@ -1,9 +1,32 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 # -------------------------------------------------------------------------
 # This is a sample controller
 # this file is released under public domain and you can use without limitations
 # -------------------------------------------------------------------------
+class Access:
+    def __init__(self, db, session):
+        self.db=db
+        self.session=session
+    _superadmins = set()
+    _admins = set()
+    _basicUsers = set()
 
+    @staticmethod
+    def buildAccessCache(db):
+        for row in db(db.p_user.Role=='SuperAdmin').select():
+            Access._superadmins.add(row.Email)
+        for row in db(db.p_user.Role=='Admin').select():
+            Access._admins.add(row.Email)
+        for row in db(db.p_user.Role=='BasicUser').select():
+            Access._basicUsers.add(row.Email)
+    def is_superAdmin(self):
+        return self.session.username in Access._superadmins
+    def isAdmin(self):
+        return self.session.username in Access._admins
+
+access=Access(db, session)
+Access.buildAccessCache(db)
 # ---- example index page ----
 def index():
     redirect(URL('WelCome'))
@@ -101,8 +124,12 @@ def user_dashboard():
         Field('confirm_password', 'string')
     )
     fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name]
-    grid = SQLFORM.grid(db.p_user, user_signature=False)
-    return dict(form=form, grid=grid, super_admin_count=super_admin_count, admin_count=admin_count, basic_user_count=basic_user_count)
+    if access.is_superAdmin():
+        grid = SQLFORM.grid(db.p_user, user_signature=False)
+    elif access.isAdmin():
+        grid = SQLFORM.grid((db.p_user.Role=='Admin') | (db.p_user.Role=='BasicUser'), user_signature=False)
+    return dict(form=form, grid=grid, super_admin_count=super_admin_count, admin_count=admin_count,
+                basic_user_count=basic_user_count, access=access)
 
 def domain():
     return dict()
