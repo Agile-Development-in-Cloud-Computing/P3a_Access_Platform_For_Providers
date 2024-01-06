@@ -144,3 +144,5 @@ def providerpage():
     response.view='default/provider_layout.html'
     return dict()
 
+def Forgot_Password():
+    return dict()
