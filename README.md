@@ -207,3 +207,17 @@ Shiva is assigned to document discussions and collaborate with Sahith in explori
       - Anil is exploring PythonAnywhere as a potential solution to enhance the project's database capabilities for futhur sharing the data.
 
 **Duration: 36 minutes**
+
+**Week 2 :** 
+
+1. **UI/UX Modifications**: Ankush has proposed several modifications to the UI/UX aspect of the project. He has communicated these changes in a collaborative call, sharing detailed insights and coordinating with other teams for effective implementation.
+
+2. **App and Database Development**: Faiz is actively engaged in the development of the application and its associated database.
+
+3. **Frontend Development**: Sahith has been working on modifying and developing the web application's pages, with a specific focus on frontend aspects to enhance user interaction and experience.
+
+4. **Deployment Exploration**: Shiva has explored using PythonAnywhere for deploying the application, ensuring it is compatible and easily shareable with others. This task includes ensuring the application's functionality and accessibility on the cloud platform.
+
+5. **Kanban Board Refinement and Documentation**: Anil has worked on refining the Kanban board for better project management and has updated the GitHub with meeting plans. Additionally, Anil has started drafting the project documentation, laying the groundwork for comprehensive project records.
+
+**Duration: 60 minutes**
