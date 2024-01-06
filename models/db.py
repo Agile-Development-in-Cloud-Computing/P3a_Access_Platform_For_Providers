@@ -6,7 +6,7 @@
 # -------------------------------------------------------------------------
 from gluon.contrib.appconfig import AppConfig
 from gluon.tools import Auth
-
+from datetime import datetime
 # -------------------------------------------------------------------------
 # This scaffolding model makes your app work on Google App Engine too
 # File is released under public domain and you can use without limitations
@@ -255,18 +255,79 @@ db.define_table(
 # user table
 db.define_table(
     'p_user',
-    Field('Username', 'string', length=255),
-    Field('first_name', 'string', length=255),
+    Field('Username', 'string', length=255, requires=IS_NOT_EMPTY()),
+    Field('first_name', 'string', length=255, requires=IS_NOT_EMPTY()),
     Field('last_name', 'string', length=255),
-    Field('Password', 'password'),
-    Field('Email', 'string', length=255),
+    Field('Password', 'password', requires=IS_NOT_EMPTY()),
+    Field('Email', 'string', length=255, requires=IS_NOT_EMPTY()),
     Field('Role', requires=IS_IN_SET(['SuperAdmin', 'Admin', 'BasicUser'])),
-    Field('RegistrationDate', 'datetime'),
+    Field('RegistrationDate', 'datetime', default=datetime.now()),
     Field('ma_id', 'reference master_aggr'),
     Field('LastLoginDate', 'datetime'),
-    Field('IsActive', 'boolean')
+    Field('IsActive', 'boolean', default=True)
 )
 
+if db(db.p_user).count()==0:
+    db.p_user.insert(Username='fkhan', first_name='Faiz', last_name='Khan', Password='faiz@123',
+                     Email='faiz.khan@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='apatil', first_name='Ankush', last_name='Patil', Password='ankush@123',
+                     Email='ankush.patil@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='ssingari', first_name='Sahith', last_name='Singari', Password='sahith@123',
+                     Email='sahith.singari@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='sbiru', first_name='Shiva', last_name='Biru', Password='shiva@123',
+                     Email='shiva.biru@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='agadiraju', first_name='Anil', last_name='Gadiraju', Password='anil@123',
+                     Email='anil.gadiraju@stud.fra-uas.de', Role='SuperAdmin')
+    db.p_user.insert(Username='jdoe', first_name='John', last_name='Doe', Password='Password1',
+                     Email='johndoe@example.com', Role='Admin')
+    db.p_user.insert(Username='jsmith', first_name='Jane', last_name='Smith', Password='Password2',
+                     Email='janesmith@example.com', Role='BasicUser')
+    db.p_user.insert(Username='djohnson', first_name='David', last_name='Johnson', Password='Password3',
+                     Email='davidjohnson@example.com', Role='BasicUser')
+    db.p_user.insert(Username='swilliams', first_name='Sarah', last_name='Williams', Password='Password4',
+                     Email='sarahwilliams@example.com', Role='Admin')
+    db.p_user.insert(Username='mbrown', first_name='Michael', last_name='Brown', Password='Password5',
+                     Email='michaelbrown@example.com', Role='BasicUser')
+    db.p_user.insert(Username='ejones', first_name='Emily', last_name='Jones', Password='Password6',
+                     Email='emilyjones@example.com', Role='Admin')
+    db.p_user.insert(Username='cgarcia', first_name='Christopher', last_name='Garcia', Password='Password7',
+                     Email='christophergarcia@example.com', Role='BasicUser')
+    db.p_user.insert(Username='amartinez', first_name='Amanda', last_name='Martinez', Password='Password8',
+                     Email='amandamartinez@example.com', Role='BasicUser')
+    db.p_user.insert(Username='jrodriguez', first_name='James', last_name='Rodriguez', Password='Password9',
+                     Email='jamesrodriguez@example.com', Role='Admin')
+    db.p_user.insert(Username='slee', first_name='Sophia', last_name='Lee', Password='Password10',
+                     Email='sophialee@example.com', Role='BasicUser')
+    db.p_user.insert(Username='mlopez', first_name='Matthew', last_name='Lopez', Password='Password11',
+                     Email='matthewlopez@example.com', Role='Admin')
+    db.p_user.insert(Username='ohernandez', first_name='Olivia', last_name='Hernandez', Password='Password12',
+                     Email='oliviahernandez@example.com', Role='BasicUser')
+    db.p_user.insert(Username='dscott', first_name='Daniel', last_name='Scott', Password='Password13',
+                     Email='danielscott@example.com', Role='BasicUser')
+    db.p_user.insert(Username='imiller', first_name='Isabella', last_name='Miller', Password='Password14',
+                     Email='isabellamiller@example.com', Role='Admin')
+    db.p_user.insert(Username='wgonzalez', first_name='William', last_name='Gonzalez', Password='Password15',
+                     Email='williamgonzalez@example.com', Role='BasicUser')
+    db.p_user.insert(Username='cperez', first_name='Chloe', last_name='Perez', Password='Password16',
+                     Email='chloeperez@example.com', Role='Admin')
+    db.p_user.insert(Username='awilson', first_name='Alexander', last_name='Wilson', Password='Password17',
+                     Email='alexanderwilson@example.com', Role='BasicUser')
+    db.p_user.insert(Username='eanderson', first_name='Ella', last_name='Anderson', Password='Password18',
+                     Email='ellaanderson@example.com', Role='BasicUser')
+    db.p_user.insert(Username='btaylor', first_name='Benjamin', last_name='Taylor', Password='Password19',
+                     Email='benjamintaylor@example.com', Role='Admin')
+    db.p_user.insert(Username='amartinez', first_name='Ava', last_name='Martinez', Password='Password20',
+                     Email='avamartinez@example.com', Role='BasicUser')
+    db.p_user.insert(Username='lkim', first_name='Liam', last_name='Kim', Password='Password21',
+                     Email='liamkim@example.com', Role='Admin')
+    db.p_user.insert(Username='mnguyen', first_name='Mia', last_name='Nguyen', Password='Password22',
+                     Email='muanguyen@example.com', Role='BasicUser')
+    db.p_user.insert(Username='eking', first_name='Ethan', last_name='King', Password='Password23',
+                     Email='ethanking@example.com', Role='BasicUser')
+    db.p_user.insert(Username='ghall', first_name='Grace', last_name='Hall', Password='Password24',
+                     Email='gracehall@example.com', Role='Admin')
+    db.p_user.insert(Username='lwright', first_name='Lucas', last_name='Wright', Password='Password25',
+                     Email='lucaswright@example.com', Role='BasicUser')
 
 # useroffer table
 db.define_table(
