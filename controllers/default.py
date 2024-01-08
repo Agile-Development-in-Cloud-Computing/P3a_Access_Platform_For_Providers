@@ -98,8 +98,8 @@ def login():
         user = db(db.p_user.Email == form.vars.Email).select().first()
         if user and user.Password == form.vars.password:
             session.username = user.Email  # Use 'Email' instead of 'Username'
+            user.update_record(LastLoginDate=datetime.datetime.now())
             redirect(URL('user_dashboard'))  # Redirect to dashboard after successful login
-
         response.flash = 'Invalid credentials'
 
     return dict(form=form)
@@ -110,10 +110,12 @@ def logout():
     redirect(URL('WelCome'))
 
 def user_dashboard():
+    fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name, db.p_user.Email, db.p_user.Role,
+              db.p_user.RegistrationDate, db.p_user.ma_id, db.p_user.LastLoginDate]
     if access.is_superAdmin():
-        grid = SQLFORM.grid(db.p_user, user_signature=False)
+        grid = SQLFORM.grid(db.p_user, user_signature=False, fields=fields)
     elif access.isAdmin():
-        grid = SQLFORM.grid((db.p_user.Role=='Admin') | (db.p_user.Role=='BasicUser'), user_signature=False)
+        grid = SQLFORM.grid((db.p_user.Role=='Admin') | (db.p_user.Role=='BasicUser'), user_signature=False, fields=fields)
     else:
         redirect(URL('domain'))
     super_admin_count = db(db.p_user.Role=='SuperAdmin').count()
@@ -128,7 +130,6 @@ def user_dashboard():
         Field('password', 'string'),
         Field('confirm_password', 'string')
     )
-    fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name]
 
     return dict(form=form, grid=grid, super_admin_count=super_admin_count, admin_count=admin_count,
                 basic_user_count=basic_user_count, access=access)
