@@ -6,7 +6,7 @@
 # -------------------------------------------------------------------------
 from gluon.contrib.appconfig import AppConfig
 from gluon.tools import Auth
-from datetime import datetime
+import datetime
 # -------------------------------------------------------------------------
 # This scaffolding model makes your app work on Google App Engine too
 # File is released under public domain and you can use without limitations
@@ -201,6 +201,31 @@ db.define_table(
     Field('GroupID', 'integer', 'reference pgroup')
 )
 
+if db(db.masteragreementtype).count()==0:
+    db.masteragreementtype.insert(Name='Master Agreement 001', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today()+ datetime.timedelta(days=7), DailyRateIndicator=True,
+                                  Deadline= datetime.date(year=2023, month=1, day=22), TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+    db.masteragreementtype.insert(Name='Master Agreement 002', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today() + datetime.timedelta(days=7),
+                                  DailyRateIndicator=True,
+                                  Deadline=datetime.date(year=2023, month=1, day=22),
+                                  TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+    db.masteragreementtype.insert(Name='Master Agreement 003', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today() + datetime.timedelta(days=7),
+                                  DailyRateIndicator=False,
+                                  Deadline=datetime.date(year=2023, month=1, day=22),
+                                  TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+    db.masteragreementtype.insert(Name='Master Agreement 004', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today() + datetime.timedelta(days=7),
+                                  DailyRateIndicator=True,
+                                  Deadline=datetime.date(year=2023, month=1, day=22),
+                                  TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+
+
 # negotiation table
 db.define_table(
     'negotiation',
@@ -266,7 +291,7 @@ db.define_table(
     Field('Password', 'password', requires=IS_NOT_EMPTY()),
     Field('Email', 'string', length=255, requires=IS_NOT_EMPTY()),
     Field('Role', requires=IS_IN_SET(['SuperAdmin', 'Admin', 'BasicUser'])),
-    Field('RegistrationDate', 'datetime', default=datetime.now()),
+    Field('RegistrationDate', 'datetime', default=datetime.datetime.now()),
     Field('ma_id', 'reference master_aggr'),
     Field('LastLoginDate', 'datetime'),
     Field('IsActive', 'boolean', default=True)

@@ -177,7 +177,8 @@ def delete_user():
     redirect(URL('user_dashboard'))
 
 def domain():
-    return dict()
+    ma_rows = db(db.masteragreementtype).select()
+    return dict(ma_rows=ma_rows)
 
 
 def positions():

@@ -1,12 +1,10 @@
 <div style="width: 300px; height: 200px; background: #D9D9D9; box-shadow: 0px 5px 20px 10px rgba(250.75, 252.45, 255, 0.25); border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; padding: 10px;">
-  
+
   <div style="height: 20%; border-radius: 5px; display: flex; align-items: center;">
     <div style="height: 20%;  border-radius: 5px;">
-      <div style="width: 100%; height: 100%; color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word">Master Agreement #</div>
+      <div style="width: 100%; height: 100%; color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{=ma.Name}}</div>
     </div>
-    <div style="width: 10%; height: 100%; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
-      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;padding-left:15px"> Value</div>
-    </div>
+
   </div>
 
 
@@ -16,9 +14,7 @@
     <div style="height: 20%;  border-radius: 5px;">
       <div style="width: 100%; height: 100%; color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word">Short Description :</div>
     </div>
-    <div style="width: 10%; height: 100%; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
-      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;padding-left:15px"> Data</div>
-    </div>
+
   </div>
 
 
@@ -30,7 +26,7 @@
       <div style="width: 10px; height: 10px; background: #7DE713; border-radius: 9999px;"></div>
     </div>
     <div style="display: flex; align-items: center; margin-left: 10px; border-radius: 5px;">
-      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Starts on</div>
+      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Starts on: {{=ma.ValidFrom}}</div>
     </div>
   </div>
 
@@ -40,7 +36,7 @@
       <div style="width: 10px; height: 10px; background: #E73913; border-radius: 9999px;"></div>
     </div>
     <div style="display: flex; align-items: center; margin-left: 10px; border-radius: 5px;">
-      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Expiring on</div>
+      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Expiring on: {{=ma.ValidUntil}}</div>
     </div>
   </div>
   
