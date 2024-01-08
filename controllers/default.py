@@ -171,6 +171,10 @@ def edit_user():
 
     return dict(form=form)
 
+def delete_user():
+    userid = request.vars.userid
+    db(db.p_user.id==userid).delete()
+    redirect(URL('user_dashboard'))
 
 def domain():
     return dict()
