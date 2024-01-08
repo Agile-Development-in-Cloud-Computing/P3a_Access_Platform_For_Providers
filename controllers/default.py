@@ -178,7 +178,10 @@ def delete_user():
 
 def domain():
     ma_rows = db(db.masteragreementtype).select()
-    return dict(ma_rows=ma_rows)
+    provider_count = db(db.provider).count()
+    open_ma = db(db.masteragreementtype.ValidUntil>datetime.date.today()).count()
+    closed_ma = db(db.masteragreementtype.ValidUntil< datetime.date.today()).count()
+    return dict(ma_rows=ma_rows, provider_count=provider_count, open_ma=open_ma, closed_ma=closed_ma)
 
 
 def positions():
