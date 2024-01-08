@@ -20,6 +20,11 @@ if request.global_settings.web2py_version < "2.15.5":
 # be redirected to HTTPS, uncomment the line below:
 # -------------------------------------------------------------------------
 # request.requires_https()
+import sys
+sys.path.append('/modules')
+
+# Now you can import your module
+from acl import Access
 
 # -------------------------------------------------------------------------
 # once in production, remove reload=True to gain full speed
@@ -85,6 +90,7 @@ response.form_label_separator = ''
 # (more options discussed in gluon/tools.py)
 # -------------------------------------------------------------------------
 #
+
 db.define_table(
     'master_aggr',
     Field('ma_id', 'string'),
@@ -161,9 +167,6 @@ if configuration.get('scheduler.enabled'):
 # after defining tables, uncomment below to enable auditing
 # -------------------------------------------------------------------------
 # auth.enable_record_versioning(db)
-db.define_table('university',
-                Field('name', 'string', required=IS_NOT_EMPTY()),
-                Field('ranking', 'integer'))
 
 # Define web2py models
 
@@ -252,6 +255,8 @@ db.define_table(
     Field('Status', 'string', length=50)
 )
 
+
+
 # user table
 db.define_table(
     'p_user',
@@ -266,6 +271,13 @@ db.define_table(
     Field('LastLoginDate', 'datetime'),
     Field('IsActive', 'boolean', default=True)
 )
+
+def get_user_role():
+    user = db(db.p_user.Email == session.username).select().first()
+    if user:
+        return user.Role
+    else:
+        return 'BasicUser'
 
 if db(db.p_user).count()==0:
     db.p_user.insert(Username='fkhan', first_name='Faiz', last_name='Khan', Password='faiz@123',
