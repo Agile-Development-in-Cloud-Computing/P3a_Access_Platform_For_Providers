@@ -141,6 +141,37 @@ def user_dashboard():
     return dict(form=form, grid=grid, super_admin_count=super_admin_count, admin_count=admin_count,
                 basic_user_count=basic_user_count, access=access, user_rows=user_rows)
 
+def edit_user():
+    userid = request.vars.userid
+    user_record = None
+    if userid:
+        user_record = db(db.p_user.id == userid).select().first()
+    if not access.is_superAdmin():
+        roles_array = ['Admin', 'BasicUser']
+    else:
+        roles_array = ['SuperAdmin', 'Admin', 'BasicUser']
+    form = SQLFORM.factory(
+        Field('Username', 'string', requires=IS_NOT_EMPTY()),
+        Field('first_name', 'string', requires=IS_NOT_EMPTY()),
+        Field('last_name', 'string'),
+        Field('Email', 'string', requires=IS_NOT_EMPTY()),
+        Field('ma_id', requires=IS_IN_SET([])),
+        Field('Role', requires=IS_IN_SET(roles_array)),
+        Field('Password', 'password', requires=IS_NOT_EMPTY()),
+        record=user_record
+    )
+    if form.process().accepted:
+        if user_record:
+            user_record.update_record(**form.vars)
+            response.flash = 'Record Updated'
+        else:
+            db.p_user.insert(**form.vars)
+            response.flash = 'New Record Created'
+        redirect(URL('user_dashboard'))
+
+    return dict(form=form)
+
+
 def domain():
     return dict()
 
