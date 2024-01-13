@@ -10,7 +10,7 @@ sys.path.append('/modules')
 
 # Now you can import your module
 from acl import Access
-from api_builder import get_2a_provider_data, get_2a_ma_data
+# from api_builder import get_2a_provider_data, get_2a_ma_data
 
 
 
@@ -214,4 +214,13 @@ def providerpage():
     return dict()
 
 def Forgot_Password():
+    return dict()
+
+def Contact():
+    return dict()
+
+def Register():
+    return dict()
+
+def Roles():
     return dict()

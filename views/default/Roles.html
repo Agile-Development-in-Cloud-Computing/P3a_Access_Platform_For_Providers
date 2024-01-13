@@ -1,37 +1,33 @@
 {{extend 'basic_layout.html'}}
-
+{{include 'components/agreement_dashboard_component.html'}}
 <br><br>
 <div style="width: 100%; height: 100%; color: white; font-size: 25px; font-family: Inter; font-weight: 700; word-wrap: break-word">Available Roles</div>
+
+<div style="width: 100%; height: 100%; color: white; font-size: 24px; font-family: Inter; font-weight: 700; word-wrap: break-word">Available Domains to Quote Price<br/><br/></div>
+
 
 
 <div class="mx-auto" style="background-color:white; padding:40px;">
   <table id="userTable" class="table table-striped table-hover">
     <thead>
       <tr>
-        <th>S.No</th>
-        <th>Provider Name</th>
-        <th>Domains</th>
-        <th>Address</th>
-        <th>Valid From</th>
-        <th>Valid Until</th>
-        <th>Experience</th>
-        <th>MA ID</th>
-        <th>Price</th>
+        <th>Domain Name</th>
+        <th>Role Name</th>
+        <th>Experience Level</th>
+        <th>Technologies Catalog</th>
+        <th>Submit Price</th>
         <th>Clickable Button</th>
       </tr>
     </thead>
     <tbody>
       {{for row in rows:}}
         <tr>
-          <td>{{=row['sno']}}</td>
-          <td>{{=row['provider_name']}}</td>
-          <td>{{=row['domains']}}</td>
-          <td>{{=row['address']}}</td>
-          <td>{{=row['valid_from']}}</td>
-          <td>{{=row['valid_until']}}</td>
-          <td>{{=row['experience']}}</td>
-          <td>{{=row['ma_id']}}</td>
-          <td>{{=row['price']}}</td>
+          <td>{{=row['Domain_Name']}}</td>
+          <td>{{=row['Role_Name']}}</td>
+          <td>{{=row['Experience_Level']}}</td>
+          <td>{{=row['Technologies_Catalog']}}</td>
+          <td>{{=row['Submit_Price']}}</td>
+          <td>{{=row['Clickable_Button']}}</td>
         </tr>
       {{pass}}
     </tbody>
