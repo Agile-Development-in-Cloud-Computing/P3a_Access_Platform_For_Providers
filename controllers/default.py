@@ -10,7 +10,7 @@ sys.path.append('/modules')
 
 # Now you can import your module
 from acl import Access
-from api_builder import get_2a_provider_data
+from api_builder import get_2a_provider_data, get_2a_ma_data
 
 
 
@@ -192,11 +192,18 @@ def delete_user():
     redirect(URL('user_dashboard'))
 
 def domain():
-    ma_rows = db(db.masteragreementtype).select()
-    provider_count = db(db.provider).count()
+    ma_data = get_2a_ma_data()
+    provider_data = get_2a_provider_data()
+    ma_rows = []
+    providers=[]
+    domains = []
+    # data for super admin first
+    ma_count = len(ma_data)
+
+    provider_count = len(provider_data)
     open_ma = db(db.masteragreementtype.ValidUntil>datetime.date.today()).count()
     closed_ma = db(db.masteragreementtype.ValidUntil< datetime.date.today()).count()
-    return dict(ma_rows=ma_rows, provider_count=provider_count, open_ma=open_ma, closed_ma=closed_ma)
+    return dict(ma_rows=ma_data, provider_count=provider_count, open_ma=open_ma, closed_ma=closed_ma, ma_count=ma_count)
 
 
 def positions():
