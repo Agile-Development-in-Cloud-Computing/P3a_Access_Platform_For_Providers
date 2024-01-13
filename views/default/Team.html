@@ -1,20 +1,22 @@
 {{extend 'Base_FrameWork.html'}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    .card {
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      max-width: 300px;
-      margin: 10px; /* Add margin for spacing between cards */
-      text-align: center;
-      font-family: arial;
-    }
-
-    /* Add a container for the cards to ensure they wrap properly */
     .card-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: nowrap; /* Set to nowrap to ensure cards stay in a single line */
+    overflow: auto; /* Add overflow property to handle horizontal scrolling if needed */
+  }
+
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 250px;
+    margin: 10px;
+    text-align: center;
+    font-family: arial;
+    flex: 0 0 auto; /* Allow cards to have their natural width */
+  }
 
     .title {
       color: grey;
@@ -53,8 +55,8 @@
 
 
   <div class="card" style=" margin: 35px 20px;">
-  <img src="{{=URL('static', 'images')}}/ankush.jpg" alt="Ankush" style="width:100%">
-  <h1>Ankush Laxman Patil</h1>
+  <img src="{{=URL('static', 'images')}}/ankushpatil.jpeg" alt="Ankush" style="width:100%">
+  <h2>Ankush Laxman Patil</h2>
   <p class="title">Role Name</p>
   <div style="margin: 24px 0;">
     <p>Matriculation Number: 1448072 </p>
@@ -67,7 +69,7 @@
 
 <div class="card" style=" margin: 35px 20px;">
   <img src="{{=URL('static', 'images')}}/faizkhan.jpeg" alt="Faiz" style="width:100%">
-  <h1>Faiz Mohammed Khan</h1>
+  <h2>Faiz Mohammed Khan</h2>
   <p class="title">Role Name</p>
   <div style="margin: 24px 0;">
     <p>Matriculation Number: 1427310 </p>
@@ -79,7 +81,7 @@
 
 <div class="card" style=" margin: 35px 20px;">
   <img src="{{=URL('static', 'images')}}/sahith.jpg" alt="Sahith" style="width:100%">
-  <h1>Sahith Kumar Singari</h1>
+  <h2>Sahith Kumar Singari</h2>
   <p class="title">Role Name</p>
   <div style="margin: 24px 0;">
     <p>Matriculation Number: 1446809 </p>
@@ -91,7 +93,7 @@
 
 <div class="card" style=" margin: 35px 20px;">
   <img src="{{=URL('static', 'images')}}/shiva.jpg" alt="shiva" style="width:100%">
-  <h1>Shiva Kumar Biru</h1>
+  <h2>Shiva Kumar Biru</h2>
   <p class="title">Role Name</p>
   <div style="margin: 24px 0;">
     <p>Matriculation Number: 1436929 </p>
@@ -103,7 +105,7 @@
 
 <div class="card" style=" margin: 35px 20px;">
   <img src="{{=URL('static', 'images')}}/anilkumar.jpg" alt="Anil" style="width:100%">
-  <h1>Anil Kumar Gadiraju</h1>
+  <h2>Anil Kumar Gadiraju</h2>
   <p class="title">Role Name</p>
   <div style="margin: 24px 0;">
     <p>Matriculation Number: 1428607 </p>
