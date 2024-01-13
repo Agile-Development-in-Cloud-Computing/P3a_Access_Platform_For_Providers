@@ -292,7 +292,7 @@ db.define_table(
     Field('Email', 'string', length=255, requires=IS_NOT_EMPTY()),
     Field('Role', requires=IS_IN_SET(['SuperAdmin', 'Admin', 'BasicUser'])),
     Field('RegistrationDate', 'datetime', default=datetime.datetime.now()),
-    Field('ma_id', 'reference masteragreementtype'),
+    Field('provider', 'string'),
     Field('LastLoginDate', 'datetime'),
     Field('IsActive', 'boolean', default=True)
 )
