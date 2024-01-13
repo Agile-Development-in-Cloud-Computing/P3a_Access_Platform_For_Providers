@@ -1,3 +1,11 @@
 {{extend 'basic_layout.html'}}
 
 {{include 'components/agreement_dashboard_component.html'}}
+<br/><br/>
+<div style="width:90%;" class="mx-auto row">
+    {{for ma in ma_rows:}}
+    <div class="col-4" style="margin-bottom: 20px;">
+    {{include 'components/master_agreement001.html'}}
+        </div>
+    {{pass}}
+</div>

@@ -6,7 +6,7 @@
 # -------------------------------------------------------------------------
 from gluon.contrib.appconfig import AppConfig
 from gluon.tools import Auth
-from datetime import datetime
+import datetime
 # -------------------------------------------------------------------------
 # This scaffolding model makes your app work on Google App Engine too
 # File is released under public domain and you can use without limitations
@@ -20,6 +20,11 @@ if request.global_settings.web2py_version < "2.15.5":
 # be redirected to HTTPS, uncomment the line below:
 # -------------------------------------------------------------------------
 # request.requires_https()
+import sys
+sys.path.append('/modules')
+
+# Now you can import your module
+from acl import Access
 
 # -------------------------------------------------------------------------
 # once in production, remove reload=True to gain full speed
@@ -85,6 +90,7 @@ response.form_label_separator = ''
 # (more options discussed in gluon/tools.py)
 # -------------------------------------------------------------------------
 #
+
 db.define_table(
     'master_aggr',
     Field('ma_id', 'string'),
@@ -161,9 +167,6 @@ if configuration.get('scheduler.enabled'):
 # after defining tables, uncomment below to enable auditing
 # -------------------------------------------------------------------------
 # auth.enable_record_versioning(db)
-db.define_table('university',
-                Field('name', 'string', required=IS_NOT_EMPTY()),
-                Field('ranking', 'integer'))
 
 # Define web2py models
 
@@ -197,6 +200,31 @@ db.define_table(
     Field('WorksContractDeadline', 'date'),
     Field('GroupID', 'integer', 'reference pgroup')
 )
+
+if db(db.masteragreementtype).count()==0:
+    db.masteragreementtype.insert(Name='Master Agreement 001', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today()+ datetime.timedelta(days=7), DailyRateIndicator=True,
+                                  Deadline= datetime.date(year=2023, month=1, day=22), TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+    db.masteragreementtype.insert(Name='Master Agreement 002', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today() + datetime.timedelta(days=7),
+                                  DailyRateIndicator=True,
+                                  Deadline=datetime.date(year=2023, month=1, day=22),
+                                  TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+    db.masteragreementtype.insert(Name='Master Agreement 003', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today() + datetime.timedelta(days=7),
+                                  DailyRateIndicator=False,
+                                  Deadline=datetime.date(year=2023, month=1, day=22),
+                                  TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+    db.masteragreementtype.insert(Name='Master Agreement 004', ValidFrom=datetime.date.today(),
+                                  ValidUntil=datetime.date.today() + datetime.timedelta(days=7),
+                                  DailyRateIndicator=True,
+                                  Deadline=datetime.date(year=2023, month=1, day=22),
+                                  TeamDeadLine=datetime.date(year=2023, month=1, day=18),
+                                  WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
+
 
 # negotiation table
 db.define_table(
@@ -252,6 +280,8 @@ db.define_table(
     Field('Status', 'string', length=50)
 )
 
+
+
 # user table
 db.define_table(
     'p_user',
@@ -261,11 +291,18 @@ db.define_table(
     Field('Password', 'password', requires=IS_NOT_EMPTY()),
     Field('Email', 'string', length=255, requires=IS_NOT_EMPTY()),
     Field('Role', requires=IS_IN_SET(['SuperAdmin', 'Admin', 'BasicUser'])),
-    Field('RegistrationDate', 'datetime', default=datetime.now()),
-    Field('ma_id', 'reference master_aggr'),
+    Field('RegistrationDate', 'datetime', default=datetime.datetime.now()),
+    Field('ma_id', 'reference masteragreementtype'),
     Field('LastLoginDate', 'datetime'),
     Field('IsActive', 'boolean', default=True)
 )
+
+def get_user_role():
+    user = db(db.p_user.Email == session.username).select().first()
+    if user:
+        return user.Role
+    else:
+        return 'BasicUser'
 
 if db(db.p_user).count()==0:
     db.p_user.insert(Username='fkhan', first_name='Faiz', last_name='Khan', Password='faiz@123',
