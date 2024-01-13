@@ -14,12 +14,3 @@ def get_g3a_data():
 
     json_data = json.dumps(user_list)
     return json_data
-
-def get_2a_provider_data():
-    try:
-        response = requests.get(provider_api)
-        response.raise_for_status()  # Raise an exception for bad responses
-        data = response.json()  # Assuming the API returns JSON data
-        return dict(data=data)
-    except requests.exceptions.RequestException as e:
-        return dict(response=f"Error fetching data: {e}")

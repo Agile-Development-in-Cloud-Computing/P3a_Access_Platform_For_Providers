@@ -115,9 +115,13 @@ def user_dashboard():
         user_provider = logged_in_user.provider
         roles_array = ['Admin', 'BasicUser']
         user_rows = db((db.p_user.Role!='SuperAdmin') & (db.p_user.provider==user_provider)).select()
+        admin_count = db((db.p_user.Role == 'Admin') & (db.p_user.provider==user_provider)).count()
+        basic_user_count = db((db.p_user.Role == 'BasicUser') & (db.p_user.provider==user_provider)).count()
     else:
         roles_array = ['SuperAdmin', 'Admin']
         user_rows = db(db.p_user).select()
+        admin_count = db(db.p_user.Role == 'Admin').count()
+        basic_user_count = db(db.p_user.Role == 'BasicUser').count()
     fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name, db.p_user.Email, db.p_user.Role, db.p_user.RegistrationDate, db.p_user.provider, db.p_user.LastLoginDate]
     if access.is_superAdmin():
         grid = SQLFORM.grid(db.p_user, user_signature=False, fields=fields)
@@ -126,8 +130,6 @@ def user_dashboard():
     else:
         redirect(URL('domain'))
     super_admin_count = db(db.p_user.Role=='SuperAdmin').count()
-    admin_count = db(db.p_user.Role=='Admin').count()
-    basic_user_count = db(db.p_user.Role=='BasicUser').count()
     form = SQLFORM.factory(
         Field('Username', 'string', requires=IS_NOT_EMPTY()),
         Field('first_name', 'string', requires=IS_NOT_EMPTY()),
