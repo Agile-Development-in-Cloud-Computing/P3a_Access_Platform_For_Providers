@@ -42,7 +42,7 @@
     <tbody>
     {{for r in user_rows:}}
     <tr><td>{{=r.id}}</td><td>{{=r.Username}}</td><td>{{=r.first_name}}</td><td>{{=r.last_name}}</td><td>{{=r.Email}}</td>
-    <td>{{=r.Role}}</td><td>{{=r.ma_id}}</td><td>{{=r.RegistrationDate}}</td><td>{{=r.LastLoginDate}}</td><td><a href="{{=URL('edit_user', vars=dict(userid=r.id))}}">Edit</a> | <a onclick="return confirm('Are you sure you want to delete {{=r.Username}}')" href="{{=URL('delete_user', vars=dict(userid=r.id))}}">Delete</a></td></tr>
+    <td>{{=r.Role}}</td><td>{{=r.provider}}</td><td>{{=r.RegistrationDate}}</td><td>{{=r.LastLoginDate}}</td><td><a href="{{=URL('edit_user', vars=dict(userid=r.id))}}">Edit</a> | <a onclick="return confirm('Are you sure you want to delete {{=r.Username}}')" href="{{=URL('delete_user', vars=dict(userid=r.id))}}">Delete</a></td></tr>
     {{pass}}
     </tbody>
   </table>

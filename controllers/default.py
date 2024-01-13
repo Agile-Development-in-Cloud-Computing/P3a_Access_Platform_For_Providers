@@ -10,6 +10,7 @@ sys.path.append('/modules')
 
 # Now you can import your module
 from acl import Access
+from api_builder import get_2a_provider_data
 
 
 
@@ -100,16 +101,24 @@ def logout():
 
 def user_dashboard():
     userid = request.vars.userid
+    try:
+        logged_in_user = db(db.p_user.Email==session.username).select().first()
+    except:
+        raise Exception('No such user exists')
     user_record=None
+    providers = []
+    for p in get_2a_provider_data():
+        providers.append(p["providerName"])
     if userid:
         user_record = db(db.p_user.id==userid).select().first()
     if not access.is_superAdmin():
+        user_provider = logged_in_user.provider
         roles_array = ['Admin', 'BasicUser']
-        user_rows = db(db.p_user.Role!='SuperAdmin').select()
+        user_rows = db((db.p_user.Role!='SuperAdmin') & (db.p_user.provider==user_provider)).select()
     else:
-        roles_array = ['SuperAdmin', 'Admin', 'BasicUser']
+        roles_array = ['SuperAdmin', 'Admin']
         user_rows = db(db.p_user).select()
-    fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name, db.p_user.Email, db.p_user.Role, db.p_user.RegistrationDate, db.p_user.ma_id, db.p_user.LastLoginDate]
+    fields = [db.p_user.Username, db.p_user.first_name, db.p_user.last_name, db.p_user.Email, db.p_user.Role, db.p_user.RegistrationDate, db.p_user.provider, db.p_user.LastLoginDate]
     if access.is_superAdmin():
         grid = SQLFORM.grid(db.p_user, user_signature=False, fields=fields)
     elif access.isAdmin():
@@ -124,7 +133,7 @@ def user_dashboard():
         Field('first_name', 'string', requires=IS_NOT_EMPTY()),
         Field('last_name', 'string'),
         Field('Email', 'string', requires=IS_NOT_EMPTY()),
-        Field('ma_id', requires=IS_IN_SET([])),
+        Field('provider', requires=IS_IN_SET(providers)),
         Field('Role', requires=IS_IN_SET(roles_array)),
         Field('Password', 'password', requires=IS_NOT_EMPTY()),
         record=user_record
@@ -144,6 +153,10 @@ def user_dashboard():
 def edit_user():
     userid = request.vars.userid
     user_record = None
+
+    providers = []
+    for p in get_2a_provider_data():
+        providers.append(p["providerName"])
     if userid:
         user_record = db(db.p_user.id == userid).select().first()
     if not access.is_superAdmin():
@@ -155,7 +168,7 @@ def edit_user():
         Field('first_name', 'string', requires=IS_NOT_EMPTY()),
         Field('last_name', 'string'),
         Field('Email', 'string', requires=IS_NOT_EMPTY()),
-        Field('ma_id', requires=IS_IN_SET([])),
+        Field('provider', requires=IS_IN_SET(providers)),
         Field('Role', requires=IS_IN_SET(roles_array)),
         Field('Password', 'password', requires=IS_NOT_EMPTY()),
         record=user_record
