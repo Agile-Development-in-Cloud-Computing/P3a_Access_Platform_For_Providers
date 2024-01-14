@@ -212,7 +212,10 @@ def domains():
         logged_in_user = db(db.p_user.Email==session.username).select().first()
     except:
         raise Exception('No such user exists')
-    ma_data = [ma for ma in get_2a_ma_data() if ma['masterAgreementTypeName']==ma_key]
+    if ma_key:
+        ma_data = [ma for ma in get_2a_ma_data() if ma['masterAgreementTypeName']==ma_key]
+    else:
+        ma_data = [ma for ma in get_2a_ma_data()]
     view_data = ma_data.pop()
     return dict(ma_data=view_data, domains=view_data['domains'])
 
