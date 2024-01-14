@@ -28,13 +28,10 @@
   </div>
   
   
-  <button onclick="window.location.href='your_target_page.html'" style="height: 20%; border-radius: 5px; display: flex; align-items: center; background: #52DEBD; border: none; cursor: pointer; outline: none;">
-    <div style="width: 90%; height: 100%; border-radius: 5px;">
-        <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word; padding-top: 7px; padding-left: 5px;">Click to Process &#8594;</div>
+  <a href="{{=URL('domains', vars=dict(ma_key=ma['masterAgreementTypeName']))}}" style="height: 20%; border-radius: 5px; display: flex; align-items: center; background: #52DEBD; border: none; cursor: pointer; outline: none;">
+    <div class="text-center" style="width: 90%; height: 100%; border-radius: 5px;">
+        <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 600; word-wrap: break-word;">Click to Process &#8594;</div>
     </div>
-    <div style="width: 10%; height: 100%; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
-        <p style="width: 10px; height: 1px; font-size: 40px; font-weight: bold; margin: 15; padding-bottom: 30px; padding-right: 45px;">&#8594;</p>
-    </div>
-</button>
+</a>
 
 </div>
