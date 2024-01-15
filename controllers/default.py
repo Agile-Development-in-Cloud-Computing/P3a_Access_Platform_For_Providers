@@ -6,6 +6,7 @@ from collections import defaultdict
 # -------------------------------------------------------------------------
 import datetime
 import sys
+from dataclasses import dataclass
 sys.path.append('/modules')
 
 # Now you can import your module
@@ -13,10 +14,64 @@ from acl import Access
 from api_builder import get_2a_provider_data, get_2a_ma_data
 
 
-
+@dataclass
+class Role:
+    providerName:str
+    domainId:int
+    domainName:str
+    roleName: str
+    experienceLevel:str
+    technologiesCatalog:str
+    mastAggr:str
 
 access=Access(db, session)
 Access.buildAccessCache(db)
+
+class Helper:
+    def __init__(self, db, session):
+        self.db = db
+        self.session = session
+
+    def check_role_offer_exists(self, domainId, role_name, provider):
+        return self.db((self.db.offer.provider==provider) & (self.db.offer.domain_id==domainId) & (self.db.offer.role==role_name)).count()>0
+
+    def filter_dict_by_provider(self, provider, provider_dict):
+        filtered_role_dict = {key: value for key, value in provider_dict.items() if key[0] == provider}
+        return filtered_role_dict
+
+    @staticmethod
+    def buildApiDict():
+        json_data = get_2a_provider_data()
+        role_dict = {}
+        for provider_data in json_data:
+            provider_name = provider_data['providerName']
+
+            for domain_data in provider_data['domains']:
+                domain_id = domain_data['id']
+                domain_name = domain_data['domainName']
+
+                for role_data in domain_data['roles']:
+                    role_name = role_data['roleName']
+                    role_key = (provider_name, domain_id, role_name)
+
+                    # Create Role object
+                    role_object = Role(
+                        providerName=provider_name,
+                        domainId=domain_id,
+                        domainName=domain_name,
+                        roleName=role_name,
+                        experienceLevel=role_data['experienceLevel'],
+                        technologiesCatalog=role_data['technologiesCatalog'],
+                        mastAggr=provider_data['masterAgreementTypeId']
+                    )
+
+                    # Add to the dictionary
+                    role_dict[role_key] = role_object
+        return role_dict
+helper=Helper(db, session)
+provider_dict = Helper.buildApiDict()
+
+
 # ---- example index page ----
 def index():
     redirect(URL('WelCome'))
@@ -207,17 +262,46 @@ def ma_details():
 
 
 def domains():
+    provider_data = get_2a_provider_data()
     ma_key = request.vars['ma_key']
     try:
         logged_in_user = db(db.p_user.Email==session.username).select().first()
+        #provider_name = logged_in_user.provider
+        provider_name = 'provider_x'
     except:
-        raise Exception('No such user exists')
-    if ma_key:
-        ma_data = [ma for ma in get_2a_ma_data() if ma['masterAgreementTypeName']==ma_key]
+        raise Exception('No such user exists or no such provider')
+    if provider_name:
+        #pr_data = [pr for pr in get_2a_provider_data() if pr['providerName'] == provider_name]
+        pr_data = helper.filter_dict_by_provider(provider_name, provider_dict)
     else:
-        ma_data = [ma for ma in get_2a_ma_data()]
-    view_data = ma_data.pop()
-    return dict(ma_data=view_data, domains=view_data['domains'])
+        pr_data = provider_dict
+
+    unique_providers = set()
+    open_roles = 0
+    closed_roles = 0
+    submitted_offers = 0
+    # Iterate over the dictionary to count unique providers
+    for key, value in pr_data.items():
+        unique_providers.add(key[0])
+        if helper.check_role_offer_exists(value.domainId, value.roleName, value.providerName) is True:
+            submitted_offers +=1
+        else:
+            open_roles +=1
+    # Count of unique providers
+    provider_count = len(unique_providers)
+
+
+    return dict(  provider=provider_name, helper=helper, pr_data=pr_data, provider_count=provider_count, open_roles=open_roles,
+                  submitted_offers=submitted_offers, closed_roles=closed_roles)
+
+def submit_price():
+    domainId = int(request.vars['domainId'])
+    role_name = request.vars['role_name']
+    provider = 'provider_x'
+    price = int(request.vars['price'])
+    db.offer.insert(provider=provider, domain_id=domainId, role=role_name, price=price, status='Submitted')
+    redirect(URL('domains'))
+    return dict()
 
 def positions():
     return dict()
@@ -236,4 +320,30 @@ def Register():
     return dict()
 
 def Roles():
-    return dict()
+    try:
+        logged_in_user = db(db.p_user.Email==session.username).select().first()
+        #provider_name = logged_in_user.provider
+        provider_name = 'provider_x'
+    except:
+        raise Exception('No such user exists or no such provider')
+    if provider_name:
+        #pr_data = [pr for pr in get_2a_provider_data() if pr['providerName'] == provider_name]
+        pr_data = helper.filter_dict_by_provider(provider_name, provider_dict)
+    else:
+        pr_data = provider_dict
+    unique_providers = set()
+    open_roles = 0
+    closed_roles = 0
+    submitted_offers = 0
+
+    # Iterate over the dictionary to count unique providers
+    for key, value in pr_data.items():
+        unique_providers.add(key[0])
+        if helper.check_role_offer_exists(value.domainId, value.roleName, value.providerName) is True:
+            submitted_offers += 1
+        else:
+            open_roles += 1
+    # Count of unique providers
+    provider_count = len(unique_providers)
+    return dict(pr_data= pr_data, helper=helper, provider_count=provider_count, open_roles=open_roles,
+                  submitted_offers=submitted_offers, closed_roles=closed_roles)

@@ -13,19 +13,32 @@
       </tr>
     </thead>
     <tbody>
-      {{for row in domains:}}
-      {{ for r in row['roles']:}}
+      {{for key, value in pr_data.items():}}
+      {{if helper.check_role_offer_exists(value.domainId, value.roleName, value.providerName) is not True:}}
         <tr>
-          <td>{{=row['domainId']}}</td>
-          <td>{{=row['domainName']}}</td>
-          <td>{{=r['roleName']}}</td>
-          <td>{{=r['experienceLevel']}}</td>
-          <td>{{=r['technologiesCatalog']}}</td>
-          <td>Submit_Profile</td>
-          <td></td>
+          <td>{{=value.domainId}}</td>
+                <td>{{=value.domainName}}</td>
+                <td>{{=value.roleName}}</td>
+                <td>{{=value.experienceLevel}}</td>
+                <td>{{=value.technologiesCatalog}}</td>
+          <td><input type="number" name="price" id="price_{{=value.domainId}}_{{=value.roleName}}"></td>
+          <td><button class="btn btn-primary" onclick="submitPrice('{{=value.domainId}}', '{{=value.roleName}}')">Submit</button></td>
         </tr>
       {{pass}}
       {{pass}}
     </tbody>
   </table>
 </div>
+
+<script>
+    function submitPrice(domainId, roleName) {
+        var priceInput = document.getElementById("price_" + domainId + "_" + roleName);
+        var price = priceInput.value;
+
+        // Use web2py URL function to generate the correct URL
+        var url = '{{=URL('default', 'submit_price')}}?domainId=' + domainId + '&role_name=' + roleName + '&price=' + price;
+
+        // Redirect to the generated URL
+        window.location.href = url;
+    }
+</script>

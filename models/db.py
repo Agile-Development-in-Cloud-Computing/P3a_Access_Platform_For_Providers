@@ -238,10 +238,13 @@ db.define_table(
 # offer table
 db.define_table(
     'offer',
-    Field('ProviderID', 'integer', 'reference provider'),
-    Field('AgreementTypeID', 'integer', 'reference masteragreementtype'),
-    Field('OfferDate', 'datetime'),
-    Field('Status', 'string', length=50)
+    Field('provider', 'string'),
+    Field('domain_id', 'integer'),
+    Field('role', 'string'),
+    Field('price', 'integer'),
+    Field('offerDate', 'datetime', default=datetime.datetime.now()),
+    Field('mast_aggr', 'string',),
+    Field('status', 'string', length=50)
 )
 
 # pgroup table
