@@ -11,65 +11,17 @@ sys.path.append('/modules')
 
 # Now you can import your module
 from acl import Access
-from api_builder import get_2a_provider_data, get_2a_ma_data
+from api_builder import get_2a_provider_data, get_2a_ma_data, BuildAPI
+from helper import Helper
 
 
-@dataclass
-class Role:
-    providerName:str
-    domainId:int
-    domainName:str
-    roleName: str
-    experienceLevel:str
-    technologiesCatalog:str
-    mastAggr:str
 
 access=Access(db, session)
 Access.buildAccessCache(db)
 
-class Helper:
-    def __init__(self, db, session):
-        self.db = db
-        self.session = session
 
-    def check_role_offer_exists(self, domainId, role_name, provider):
-        return self.db((self.db.offer.provider==provider) & (self.db.offer.domain_id==domainId) & (self.db.offer.role==role_name)).count()>0
-
-    def filter_dict_by_provider(self, provider, provider_dict):
-        filtered_role_dict = {key: value for key, value in provider_dict.items() if key[0] == provider}
-        return filtered_role_dict
-
-    @staticmethod
-    def buildApiDict():
-        json_data = get_2a_provider_data()
-        role_dict = {}
-        for provider_data in json_data:
-            provider_name = provider_data['providerName']
-
-            for domain_data in provider_data['domains']:
-                domain_id = domain_data['id']
-                domain_name = domain_data['domainName']
-
-                for role_data in domain_data['roles']:
-                    role_name = role_data['roleName']
-                    role_key = (provider_name, domain_id, role_name)
-
-                    # Create Role object
-                    role_object = Role(
-                        providerName=provider_name,
-                        domainId=domain_id,
-                        domainName=domain_name,
-                        roleName=role_name,
-                        experienceLevel=role_data['experienceLevel'],
-                        technologiesCatalog=role_data['technologiesCatalog'],
-                        mastAggr=provider_data['masterAgreementTypeId']
-                    )
-
-                    # Add to the dictionary
-                    role_dict[role_key] = role_object
-        return role_dict
 helper=Helper(db, session)
-provider_dict = Helper.buildApiDict()
+provider_dict = BuildAPI.buildApiDict()
 
 
 # ---- example index page ----
