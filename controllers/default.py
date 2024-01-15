@@ -266,8 +266,8 @@ def domains():
     ma_key = request.vars['ma_key']
     try:
         logged_in_user = db(db.p_user.Email==session.username).select().first()
-        #provider_name = logged_in_user.provider
-        provider_name = 'provider_x'
+        provider_name = logged_in_user.provider
+        #provider_name = 'provider_x'
     except:
         raise Exception('No such user exists or no such provider')
     if provider_name:
@@ -322,8 +322,8 @@ def Register():
 def Roles():
     try:
         logged_in_user = db(db.p_user.Email==session.username).select().first()
-        #provider_name = logged_in_user.provider
-        provider_name = 'provider_x'
+        provider_name = logged_in_user.provider
+        #provider_name = 'provider_x'
     except:
         raise Exception('No such user exists or no such provider')
     if provider_name:
