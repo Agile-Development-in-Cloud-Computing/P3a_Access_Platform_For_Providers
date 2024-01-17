@@ -22,6 +22,7 @@ Access.buildAccessCache(db)
 
 helper=Helper(db, session)
 provider_dict = BuildAPI.buildApiDict()
+service_requests = BuildAPI.buildServiceAgreementDict()
 
 
 # ---- example index page ----
