@@ -191,14 +191,17 @@ db.define_table(
 # masteragreementtype table
 db.define_table(
     'masteragreementtype',
-    Field('Name', 'string', length=255),
-    Field('ValidFrom', 'date'),
-    Field('ValidUntil', 'date'),
-    Field('DailyRateIndicator', 'boolean'),
-    Field('Deadline', 'date'),
-    Field('TeamDeadline', 'date'),
-    Field('WorksContractDeadline', 'date'),
-    Field('GroupID', 'integer', 'reference pgroup')
+    Field('masterAgreementTypeId', 'integer'),
+    Field('masterAgreementTypeName', 'string'),
+    Field('validFrom', 'date'),
+    Field('validUntil', 'date'),
+    Field('dailyrateIndicator', 'string'),
+    Field('deadline', 'date'),
+    Field('teamdeadline', 'date'),
+    Field('workscontractdeadline', 'date'),
+    Field('provider', 'string'),
+    Field('quotePrice', 'integer'),
+    Field('isAccepted', 'boolean')
 )
 
 if db(db.masteragreementtype).count()==0:
@@ -384,4 +387,19 @@ db.define_table(
     Field('UserID', 'integer', 'reference p_user'),
     Field('ServiceRequestID', 'integer', 'reference  '),
     Field('ProfileData', 'text')
+)
+
+db.define_table(
+    'candidate',
+    Field('firstName', 'string'),
+    Field('lastName', 'string'),
+    Field('role', 'string'),
+    Field('experience', 'integer'),
+)
+
+
+db.define_table(
+    'service_offer',
+    Field('candidate', 'reference candidate'),
+    Field('serviceId', 'integer')
 )

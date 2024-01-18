@@ -23,10 +23,13 @@ Access.buildAccessCache(db)
 helper=Helper(db, session)
 provider_dict = BuildAPI.buildApiDict()
 service_requests = BuildAPI.buildServiceAgreementDict()
+agreements = BuildAPI.buildMADict()
 
 
 # ---- example index page ----
 def index():
+    if session.username:
+        redirect(URL('ma_details'))
     redirect(URL('WelCome'))
 
 
@@ -105,7 +108,7 @@ def login():
 
 def logout():
     session.username=None
-    redirect(URL('WelCome'))
+    redirect(URL('login'))
 
 def user_dashboard():
     userid = request.vars.userid
@@ -200,19 +203,51 @@ def delete_user():
     redirect(URL('user_dashboard'))
 
 def ma_details():
-    ma_data = get_2a_ma_data()
+    ma_data = agreements
     provider_data = get_2a_provider_data()
     ma_rows = []
     providers=[]
     domains = []
+    logged_in_provider = _get_provider()
     # data for super admin first
     ma_count = len(ma_data)
 
     provider_count = len(provider_data)
-    open_ma = db(db.masteragreementtype.ValidUntil>datetime.date.today()).count()
-    closed_ma = db(db.masteragreementtype.ValidUntil< datetime.date.today()).count()
-    return dict(ma_rows=ma_data, provider_count=provider_count, open_ma=open_ma, closed_ma=closed_ma, ma_count=ma_count)
+    open_ma = db(db.masteragreementtype.validUntil>datetime.date.today()).count()
+    closed_ma = db(db.masteragreementtype.validUntil< datetime.date.today()).count()
+    submitted_ma = db(db.masteragreementtype.provider == logged_in_provider).count()
+    return dict(ma_rows=ma_data, provider_count=provider_count, open_ma=open_ma, closed_ma=closed_ma, ma_count=ma_count,
+                access=access, submitted_ma=submitted_ma, helper=helper, provider=logged_in_provider)
 
+
+def master_agreement():
+    ma_key = request.vars['ma_key']
+    ma_dict = agreements
+    master_aggr = ma_dict[ma_key]
+    provider = _get_provider()
+    quote_form = SQLFORM.factory(
+        Field('quote', 'integer', 'required')
+    )
+    if quote_form.process().accepted:
+        db.masteragreementtype.update_or_insert((db.masteragreementtype.masterAgreementTypeName==master_aggr.masterAgreementTypeName) & (db.masteragreementtype.provider==provider),
+                                                masterAgreementTypeId= master_aggr.masterAgreementTypeId,
+                                                masterAgreementTypeName=master_aggr.masterAgreementTypeName,
+                                                validFrom=master_aggr.validFrom, validUntil=master_aggr.validUntil,
+                                                dailyrateIndicator=master_aggr.dailyrateIndicator, deadline=master_aggr.deadline,
+                                                teamdeadline=master_aggr.teamdeadline, workscontractdeadline=master_aggr.workscontractdeadline,
+                                                provider=provider, quotePrice=quote_form.vars.quote,
+                                                )
+        redirect(URL('master_agreement', vars=dict(ma_key=ma_key)))
+    offer_for_provider_exist = _did_provider_submit(ma_key, provider)
+    if offer_for_provider_exist:
+        offer= db(db.masteragreementtype.masterAgreementTypeName==ma_key).select().first()
+        bidPrice = offer.quotePrice
+        acceptStatus= offer.isAccepted
+    else:
+        bidPrice = 0
+        acceptStatus= 'Not submitted the offer yet'
+    return dict(master_aggr=master_aggr, quote_form=quote_form, offer_for_provider_exist=offer_for_provider_exist,
+                bidPrice=bidPrice, provider=provider, acceptStatus=acceptStatus)
 
 def domains():
     provider_data = get_2a_provider_data()
@@ -300,3 +335,27 @@ def Roles():
     provider_count = len(unique_providers)
     return dict(pr_data= pr_data, helper=helper, provider_count=provider_count, open_roles=open_roles,
                   submitted_offers=submitted_offers, closed_roles=closed_roles)
+
+
+def _get_provider():
+    try:
+        logged_in_user = db(db.p_user.Email == session.username).select().first()
+        provider_name = logged_in_user.provider
+        if provider_name is not None:
+            return provider_name
+        else:
+            return 'FRAUAS'
+    except:
+        raise Exception('No such user exists')
+
+def _did_provider_submit(ma_key, provider):
+    try:
+        row = db((db.masteragreementtype.masterAgreementTypeName == ma_key) & (db.masteragreementtype.provider == provider)).select().first()
+        if row:
+                if row.provider == provider:
+                    return True
+                else:
+                    return False
+    except:
+        raise Exception('The MA offer for this provider does not exist')
+

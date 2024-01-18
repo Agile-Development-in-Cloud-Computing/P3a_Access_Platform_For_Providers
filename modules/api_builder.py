@@ -1,3 +1,4 @@
+import datetime
 import json
 from collections import defaultdict
 import requests
@@ -28,6 +29,16 @@ class Service:
     onsiteDaysPerWeek:str
     remoteDaysPerWeek:str
 
+@dataclass
+class MasterAgreement:
+    masterAgreementTypeId: int
+    masterAgreementTypeName: str
+    validFrom: datetime.date
+    validUntil: datetime.date
+    dailyrateIndicator: str
+    deadline: datetime.date
+    teamdeadline: datetime.date
+    workscontractdeadline: datetime.date
 class BuildAPI:
     @staticmethod
     def buildApiDict():
@@ -74,6 +85,23 @@ class BuildAPI:
             services[service['serviceId']]= service_obj
         return services
 
+    @staticmethod
+    def buildMADict():
+        json_data = get_2a_ma_data()
+        agreements = {}
+        for ma in json_data:
+            ma_object = MasterAgreement(masterAgreementTypeId=int(ma['masterAgreementTypeId']), masterAgreementTypeName=ma['masterAgreementTypeName'],
+                                        validFrom=get_date_from_string(ma['validFrom']), validUntil=get_date_from_string(ma['validUntil']),
+                                        dailyrateIndicator=ma['dailyrateIndicator'], deadline=get_date_from_string(ma['deadline']),
+                                        teamdeadline=get_date_from_string(ma['teamdeadline']), workscontractdeadline=get_date_from_string(ma['workscontractdeadline']))
+            agreements[ma['masterAgreementTypeName']] = ma_object
+
+        return agreements
+
+
+
+def get_date_from_string(dateString):
+    return datetime.datetime.strptime(dateString, "%Y-%m-%d").date()
 
 def get_2a_provider_data():
     provider_api = "http://ec2-16-171-169-38.eu-north-1.compute.amazonaws.com:5000/api/providers"

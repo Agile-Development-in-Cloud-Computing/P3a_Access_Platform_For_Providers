@@ -27,5 +27,23 @@ def get_3a_offers():
     json_data = json.dumps(data_list)
     return json_data
 
+def agreement_offers():
+    rows = db(db.masteragreementtype).select()
+    data_list = [
+        {'masterAgreementTypeId': row.masterAgreementTypeId,
+         'masterAgreementTypeName': row.masterAgreementTypeName,
+         'validFrom': str(row.validFrom),
+         'validUntil': str(row.validUntil),
+         'dailyrateIndicator': row.dailyrateIndicator,
+         'deadline': str(row.deadline),
+         'teamdeadline': str(row.teamdeadline),
+         'workscontractdeadline': str(row.workscontractdeadline),
+         'domains': [],
+         'provider': row.provider,
+         'quotePrice': row.quotePrice,
+         'isAccepted': row.isAccepted} for row in rows]
+    json_data = json.dumps(data_list)
+    return json_data
+
 
 
