@@ -204,6 +204,22 @@ db.define_table(
     Field('isAccepted', 'boolean')
 )
 
+
+db.define_table(
+    'role_offer',
+    Field('roleName', 'string'),
+    Field('experienceLevel', 'string'),
+    Field('technologiesCatalog', 'string'),
+    Field('domainId', 'integer'),
+    Field('domainName', 'string'),
+    Field('masterAgreementTypeId', 'integer'),
+    Field('masterAgreementTypeName', 'string'),
+    Field('provider', 'string'),
+    Field('quotePrice', 'integer'),
+    Field('isAccepted', 'boolean'),
+    Field('offer_cycle', 'integer')
+)
+
 if db(db.masteragreementtype).count()==0:
     db.masteragreementtype.insert(Name='Master Agreement 001', ValidFrom=datetime.date.today(),
                                   ValidUntil=datetime.date.today()+ datetime.timedelta(days=7), DailyRateIndicator=True,

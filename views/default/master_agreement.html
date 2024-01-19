@@ -14,10 +14,8 @@
         <tr><th>Daily Rate Indicator</th><td>{{=master_aggr.dailyrateIndicator}}</td></tr>
         <tr><th>Deadline</th><td>{{=master_aggr.deadline}}</td></tr>
         <tr><th>Work Contract Deadline</th><td>{{=master_aggr.teamdeadline}}</td></tr>
-        <tr><th>Bid Price</th><td>{{if offer_for_provider_exist:}}{{=bidPrice}}{{else:}}{{=quote_form}}{{pass}}</tr>
-        <tr><th>Status</th><td>{{=acceptStatus}}</tr>
     </table>
-    {{if offer_for_provider_exist:}}
-    <p>Offer Submitted from <b>{{=provider}}</b> with quoted price <b>{{=bidPrice}}</b>, waiting for Response</p>
-    {{pass}}
+    <br/>
+    <a class="btn btn-outline-primary" href="{{=URL('domains', vars=dict(key=master_aggr.masterAgreementTypeName))}}">Show Roles</a>
+
 </div>

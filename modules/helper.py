@@ -20,3 +20,19 @@ class Helper:
                     return False
         except:
             return False
+
+    def check_role_exists(self, domainId, role_name, provider, master_aggr):
+        return self.db((self.db.role_offer.provider==provider) & (self.db.role_offer.domainId==domainId) & (self.db.role_offer.roleName==role_name)
+                       & (self.db.role_offer.masterAgreementTypeName==master_aggr)).count()>0
+
+    def get_role_offer_status(self, domainId, role_name, provider, master_aggr):
+        row = self.db((self.db.role_offer.provider==provider) & (self.db.role_offer.domainId==domainId) & (self.db.role_offer.roleName==role_name)
+                       & (self.db.role_offer.masterAgreementTypeName==master_aggr)).select().first()
+        if row.isAccepted is None:
+            return 'Awaiting Response'
+        elif not row.isAccepted:
+            return 'Reject'
+        elif row.isAccepted:
+            return 'Accepted'
+
+

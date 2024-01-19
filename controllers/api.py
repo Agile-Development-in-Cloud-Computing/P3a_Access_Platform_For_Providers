@@ -27,7 +27,7 @@ def get_3a_offers():
     json_data = json.dumps(data_list)
     return json_data
 
-def agreement_offers():
+def agreement_offers_old():
     rows = db(db.masteragreementtype).select()
     data_list = [
         {'masterAgreementTypeId': row.masterAgreementTypeId,
@@ -44,6 +44,83 @@ def agreement_offers():
          'isAccepted': row.isAccepted} for row in rows]
     json_data = json.dumps(data_list)
     return json_data
+
+
+def agreement_offers():
+    # Assuming db is the DAL instance where you defined your table
+
+    # Group by roleName, masterAgreementTypeName, and domainId
+    grouped_rows = db(db.role_offer).select(
+        db.role_offer.roleName,
+        db.role_offer.experienceLevel,
+        db.role_offer.technologiesCatalog,
+        db.role_offer.domainId,
+        db.role_offer.domainName,
+        db.role_offer.offer_cycle,
+        db.role_offer.masterAgreementTypeId,
+        db.role_offer.masterAgreementTypeName,
+        db.role_offer.provider,
+        db.role_offer.quotePrice,
+        db.role_offer.isAccepted,
+        groupby=(
+            db.role_offer.roleName,
+            db.role_offer.masterAgreementTypeName,
+            db.role_offer.domainId,
+            db.role_offer.provider,
+        ),
+        orderby=db.role_offer.roleName,
+    )
+
+    # Create a new dictionary to store the aggregated data
+    aggregated_data = {}
+
+    # Iterate through the grouped rows and aggregate provider and quotePrice
+    for row in grouped_rows:
+        key = (
+            row.roleName,
+            row.masterAgreementTypeName,
+            row.domainId,
+        )
+
+        if key not in aggregated_data:
+            aggregated_data[key] = {
+                'roleName': row.roleName,
+                'experienceLevel': row.experienceLevel,
+                'technologiesCatalog': row.technologiesCatalog,
+                'domainId': row.domainId,
+                'domainName': row.domainName,
+                'masterAgreementTypeId': row.masterAgreementTypeId,
+                'masterAgreementTypeName': row.masterAgreementTypeName,
+                'provider': [],
+            }
+
+        aggregated_data[key]['provider'].append({
+            'name': row.provider,
+            'quotePrice': row.quotePrice,
+            'isAccepted': row.isAccepted,
+            'cycle': row.offer_cycle
+        })
+
+
+    # Convert the aggregated data to a list
+    final_aggregated_data = list(aggregated_data.values())
+
+    # Convert the aggregated data to JSON
+    json_data = json.dumps(final_aggregated_data, indent=4)
+
+    return json_data
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -22,7 +22,7 @@ Access.buildAccessCache(db)
 
 helper=Helper(db, session)
 provider_dict = BuildAPI.buildApiDict()
-service_requests = BuildAPI.buildServiceAgreementDict()
+#service_requests = BuildAPI.buildServiceAgreementDict()
 agreements = BuildAPI.buildMADict()
 
 
@@ -202,8 +202,10 @@ def delete_user():
     db(db.p_user.id==userid).delete()
     redirect(URL('user_dashboard'))
 
+
+
 def ma_details():
-    ma_data = agreements
+    ma_data = BuildAPI.buildMAStatic()
     provider_data = get_2a_provider_data()
     ma_rows = []
     providers=[]
@@ -222,72 +224,47 @@ def ma_details():
 
 def master_agreement():
     ma_key = request.vars['ma_key']
-    ma_dict = agreements
+    ma_dict = BuildAPI.buildMAStatic()
     master_aggr = ma_dict[ma_key]
     provider = _get_provider()
-    quote_form = SQLFORM.factory(
-        Field('quote', 'integer', 'required')
-    )
-    if quote_form.process().accepted:
-        db.masteragreementtype.update_or_insert((db.masteragreementtype.masterAgreementTypeName==master_aggr.masterAgreementTypeName) & (db.masteragreementtype.provider==provider),
-                                                masterAgreementTypeId= master_aggr.masterAgreementTypeId,
-                                                masterAgreementTypeName=master_aggr.masterAgreementTypeName,
-                                                validFrom=master_aggr.validFrom, validUntil=master_aggr.validUntil,
-                                                dailyrateIndicator=master_aggr.dailyrateIndicator, deadline=master_aggr.deadline,
-                                                teamdeadline=master_aggr.teamdeadline, workscontractdeadline=master_aggr.workscontractdeadline,
-                                                provider=provider, quotePrice=quote_form.vars.quote,
-                                                )
-        redirect(URL('master_agreement', vars=dict(ma_key=ma_key)))
-    offer_for_provider_exist = _did_provider_submit(ma_key, provider)
-    if offer_for_provider_exist:
-        offer= db(db.masteragreementtype.masterAgreementTypeName==ma_key).select().first()
-        bidPrice = offer.quotePrice
-        acceptStatus= offer.isAccepted
-    else:
-        bidPrice = 0
-        acceptStatus= 'Not submitted the offer yet'
-    return dict(master_aggr=master_aggr, quote_form=quote_form, offer_for_provider_exist=offer_for_provider_exist,
-                bidPrice=bidPrice, provider=provider, acceptStatus=acceptStatus)
+
+
+    return dict(master_aggr=master_aggr, provider=provider)
 
 def domains():
-    provider_data = get_2a_provider_data()
-    ma_key = request.vars['ma_key']
-    try:
-        logged_in_user = db(db.p_user.Email==session.username).select().first()
-        provider_name = logged_in_user.provider
-        #provider_name = 'provider_x'
-    except:
-        raise Exception('No such user exists or no such provider')
-    if provider_name:
-        #pr_data = [pr for pr in get_2a_provider_data() if pr['providerName'] == provider_name]
-        pr_data = helper.filter_dict_by_provider(provider_name, provider_dict)
-    else:
-        pr_data = provider_dict
+    provider_name = _get_provider()
+    ma_data = agreements
+    ma_key = request.vars['key']
 
-    unique_providers = set()
-    open_roles = 0
-    closed_roles = 0
-    submitted_offers = 0
-    # Iterate over the dictionary to count unique providers
-    for key, value in pr_data.items():
-        unique_providers.add(key[0])
-        if helper.check_role_offer_exists(value.domainId, value.roleName, value.providerName) is True:
-            submitted_offers +=1
-        else:
-            open_roles +=1
+    rejected_offers = db((db.role_offer.isAccepted==False) & (db.role_offer.provider==provider_name)).count()
+    accepted_offers = db((db.role_offer.isAccepted==True) & (db.role_offer.provider==provider_name)).count()
+    submitted_offers = db(db.role_offer.provider==provider_name).count()
     # Count of unique providers
-    provider_count = len(unique_providers)
 
-
-    return dict(  provider=provider_name, helper=helper, pr_data=pr_data, provider_count=provider_count, open_roles=open_roles,
-                  submitted_offers=submitted_offers, closed_roles=closed_roles)
+    if ma_key:
+        ma_data = {key: value for key, value in ma_data.items() if key[0] == ma_key}
+        rejected_offers = db((db.role_offer.isAccepted == False) & (db.role_offer.provider == provider_name) & (db.role_offer.masterAgreementTypeName==ma_key)).count()
+        accepted_offers = db((db.role_offer.isAccepted == True) & (db.role_offer.provider == provider_name) & (db.role_offer.masterAgreementTypeName==ma_key)).count()
+        submitted_offers = db((db.role_offer.masterAgreementTypeName==ma_key) & (db.role_offer.provider==provider_name)).count()
+    ma_s = [key[0] for key in ma_data.keys()]
+    ma_count = len(set(ma_s))
+    return dict(  provider=provider_name, helper=helper, pr_data=ma_data, ma_count=ma_count, rejected_offers=rejected_offers,
+                  submitted_offers=submitted_offers, accepted_offers=accepted_offers)
 
 def submit_price():
     domainId = int(request.vars['domainId'])
     role_name = request.vars['role_name']
-    provider = 'provider_x'
+    provider = _get_provider()
     price = int(request.vars['price'])
-    db.offer.insert(provider=provider, domain_id=domainId, role=role_name, price=price, status='Submitted')
+    masterAgreementTypeName = request.vars['masterAgreement']
+    key = (masterAgreementTypeName, domainId, role_name)
+    role_info = agreements[key]
+
+    db.role_offer.insert(roleName=role_name, experienceLevel=role_info.experienceLevel, technologiesCatalog=role_info.technologiesCatalog,
+                         domainId=domainId, domainName= role_info.domainName, masterAgreementTypeId=role_info.masterAgreementTypeId,
+                         masterAgreementTypeName=masterAgreementTypeName, provider=provider,
+                         quotePrice=price)
+
     redirect(URL('domains'))
     return dict()
 
@@ -308,14 +285,8 @@ def Register():
     return dict()
 
 def Roles():
-    try:
-        logged_in_user = db(db.p_user.Email==session.username).select().first()
-        provider_name = logged_in_user.provider
-        #provider_name = 'provider_x'
-    except:
-        raise Exception('No such user exists or no such provider')
+    provider_name = _get_provider()
     if provider_name:
-        #pr_data = [pr for pr in get_2a_provider_data() if pr['providerName'] == provider_name]
         pr_data = helper.filter_dict_by_provider(provider_name, provider_dict)
     else:
         pr_data = provider_dict

@@ -1,8 +1,14 @@
 {{extend 'basic_layout.html'}}
 
-{{include 'components/agreement_dashboard_component.html'}}
+
 <br/><br/>
+<div style="width:90%;" class="text-light mx-auto">
+<h1>Master Agreements</h1>
+    </div>
+<br/>
+<br/>
 <div style="width:90%;" class="mx-auto row">
+
     {{for key, value in ma_rows.items():}}
     <div class="col-4" style="margin-bottom: 20px;">
     {{include 'components/master_agreement001.html'}}

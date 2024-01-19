@@ -39,6 +39,23 @@ class MasterAgreement:
     deadline: datetime.date
     teamdeadline: datetime.date
     workscontractdeadline: datetime.date
+    domainId: int
+    domainName: str
+    roleName: str
+    experienceLevel: str
+    technologiesCatalog: str
+
+@dataclass
+class MasterAgreementItem:
+    masterAgreementTypeId: int
+    masterAgreementTypeName: str
+    validFrom: datetime.date
+    validUntil: datetime.date
+    dailyrateIndicator: str
+    deadline: datetime.date
+    teamdeadline: datetime.date
+    workscontractdeadline: datetime.date
+
 class BuildAPI:
     @staticmethod
     def buildApiDict():
@@ -90,10 +107,44 @@ class BuildAPI:
         json_data = get_2a_ma_data()
         agreements = {}
         for ma in json_data:
-            ma_object = MasterAgreement(masterAgreementTypeId=int(ma['masterAgreementTypeId']), masterAgreementTypeName=ma['masterAgreementTypeName'],
-                                        validFrom=get_date_from_string(ma['validFrom']), validUntil=get_date_from_string(ma['validUntil']),
-                                        dailyrateIndicator=ma['dailyrateIndicator'], deadline=get_date_from_string(ma['deadline']),
-                                        teamdeadline=get_date_from_string(ma['teamdeadline']), workscontractdeadline=get_date_from_string(ma['workscontractdeadline']))
+            masterAgreementTypeId = int(ma['masterAgreementTypeId'])
+            masterAgreementTypeName = ma['masterAgreementTypeName']
+            validFrom = get_date_from_string(ma['validFrom'])
+            validUntil = get_date_from_string(ma['validUntil'])
+            dailyrateIndicator = ma['dailyrateIndicator']
+            deadline = get_date_from_string(ma['deadline'])
+            teamdeadline = get_date_from_string(ma['teamdeadline'])
+            workscontractdeadline = get_date_from_string(ma['workscontractdeadline'])
+            for domain in ma['domains']:
+                domainName=domain['domainName']
+                domainId = int(domain['domainId'])
+                for role in domain['roles']:
+                    roleName=role['roleName']
+                    experienceLevel=role['experienceLevel']
+                    technologiesCatalog=role['technologiesCatalog']
+                    ma_object = MasterAgreement(masterAgreementTypeId=masterAgreementTypeId, masterAgreementTypeName=masterAgreementTypeName,
+                                                validFrom=validFrom, validUntil=validUntil,
+                                                dailyrateIndicator=dailyrateIndicator, deadline=deadline,
+                                                teamdeadline=teamdeadline, workscontractdeadline=workscontractdeadline,
+                                                domainId=domainId, domainName=domainName, roleName=roleName, experienceLevel=experienceLevel,
+                                                technologiesCatalog=technologiesCatalog)
+                    agreements[masterAgreementTypeName, domainId, roleName] = ma_object
+
+        return agreements
+
+    @staticmethod
+    def buildMAStatic():
+        json_data = get_2a_ma_data()
+        agreements = {}
+        for ma in json_data:
+            ma_object = MasterAgreementItem(masterAgreementTypeId=int(ma['masterAgreementTypeId']),
+                                        masterAgreementTypeName=ma['masterAgreementTypeName'],
+                                        validFrom=get_date_from_string(ma['validFrom']),
+                                        validUntil=get_date_from_string(ma['validUntil']),
+                                        dailyrateIndicator=ma['dailyrateIndicator'],
+                                        deadline=get_date_from_string(ma['deadline']),
+                                        teamdeadline=get_date_from_string(ma['teamdeadline']),
+                                        workscontractdeadline=get_date_from_string(ma['workscontractdeadline']))
             agreements[ma['masterAgreementTypeName']] = ma_object
 
         return agreements
