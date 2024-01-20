@@ -295,9 +295,19 @@ def view_service_request():
         db.service_request_offer.insert(serviceId= serviceInfo.serviceId, employee=form.vars.employee, price=form.vars.price, masterAgreementTypeName=serviceInfo.masterAgreementTypeName, isAccepted=None)
         redirect(URL('view_service_request', vars=dict(serviceId=serviceId)))
 
-
-
     return dict(serviceInfo=serviceInfo, form=form, current_offers=current_offers, provider=provider)
+
+def negotiate():
+    offerId = request.vars['offerId']
+    row = db(db.service_request_offer.id==offerId).select().first()
+
+    form=SQLFORM.factory(
+        Field('price'),
+        record=row, showid=False
+    )
+    if form.process().accepted:
+        row.update_record(price=form.vars.price, isAccepted=None)
+    return dict(row=row, form=form)
 
 def positions():
     return dict()
@@ -315,28 +325,6 @@ def Contact():
 def Register():
     return dict()
 
-def Roles():
-    provider_name = _get_provider()
-    if provider_name:
-        pr_data = helper.filter_dict_by_provider(provider_name, provider_dict)
-    else:
-        pr_data = provider_dict
-    unique_providers = set()
-    open_roles = 0
-    closed_roles = 0
-    submitted_offers = 0
-
-    # Iterate over the dictionary to count unique providers
-    for key, value in pr_data.items():
-        unique_providers.add(key[0])
-        if helper.check_role_offer_exists(value.domainId, value.roleName, value.providerName) is True:
-            submitted_offers += 1
-        else:
-            open_roles += 1
-    # Count of unique providers
-    provider_count = len(unique_providers)
-    return dict(pr_data= pr_data, helper=helper, provider_count=provider_count, open_roles=open_roles,
-                  submitted_offers=submitted_offers, closed_roles=closed_roles)
 
 
 def _get_provider():

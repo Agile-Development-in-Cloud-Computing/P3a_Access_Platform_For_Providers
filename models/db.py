@@ -170,23 +170,7 @@ if configuration.get('scheduler.enabled'):
 
 # Define web2py models
 
-# contract table
-db.define_table(
-    'contract',
-    Field('UserOfferID', 'integer', 'reference useroffer'),
-    Field('ContractDate', 'datetime'),
-    Field('Status', 'string', length=50)
-)
 
-# evaluation table
-db.define_table(
-    'evaluation',
-    Field('UserID', 'integer', 'reference p_user'),
-    Field('ProviderID', 'integer', 'reference provider'),
-    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
-    Field('Rating', 'integer'),
-    Field('Comments', 'text')
-)
 
 # masteragreementtype table
 db.define_table(
@@ -245,14 +229,6 @@ if db(db.masteragreementtype).count()==0:
                                   WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
 
 
-# negotiation table
-db.define_table(
-    'negotiation',
-    Field('UserOfferID', 'integer', 'reference useroffer'),
-    Field('ProposedPrice', 'decimal(10,2)'),
-    Field('NegotiatedPrice', 'decimal(10,2)'),
-    Field('Status', 'string', length=50)
-)
 
 # offer table
 db.define_table(
@@ -266,30 +242,7 @@ db.define_table(
     Field('status', 'string', length=50)
 )
 
-# pgroup table
-db.define_table(
-    'pgroup',
-    Field('Name', 'string', length=255),
-    Field('Description', 'text')
-)
 
-# provider table
-db.define_table(
-    'provider',
-    Field('Name', 'string', length=255),
-    Field('Address', 'string', length=255),
-    Field('ExistenceSince', 'date'),
-    Field('ValidFrom', 'date'),
-    Field('ValidUntil', 'date')
-)
-
-# requestcycle table
-db.define_table(
-    'requestcycle',
-    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
-    Field('CycleNumber', 'integer'),
-    Field('Status', 'string', length=50)
-)
 
 # servicerequest table
 db.define_table(
@@ -387,38 +340,6 @@ if db(db.p_user).count()==0:
                      Email='gracehall@example.com', Role='Admin')
     db.p_user.insert(Username='lwright', first_name='Lucas', last_name='Wright', Password='Password25',
                      Email='lucaswright@example.com', Role='BasicUser')
-
-# useroffer table
-db.define_table(
-    'useroffer',
-    Field('UserID', 'integer', 'reference p_user'),
-    Field('OfferID', 'integer', 'reference offer'),
-    Field('IsChosen', 'boolean'),
-    Field('IsAccepted', 'boolean')
-)
-
-# userprofile table
-db.define_table(
-    'userprofile',
-    Field('UserID', 'integer', 'reference p_user'),
-    Field('ServiceRequestID', 'integer', 'reference  '),
-    Field('ProfileData', 'text')
-)
-
-db.define_table(
-    'candidate',
-    Field('firstName', 'string'),
-    Field('lastName', 'string'),
-    Field('role', 'string'),
-    Field('experience', 'integer'),
-)
-
-
-db.define_table(
-    'service_offer',
-    Field('candidate', 'reference candidate'),
-    Field('serviceId', 'integer')
-)
 
 
 db.define_table(
