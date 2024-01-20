@@ -26,8 +26,7 @@ class Service:
     skill:str
     technology:str
     experience:str
-    onsiteDaysPerWeek:str
-    remoteDaysPerWeek:str
+    masterAgreementTypeName: str
 
 @dataclass
 class MasterAgreement:
@@ -97,8 +96,7 @@ class BuildAPI:
                                                     startDate=service['startDate'], endDate=service['endDate'],
                                                     workLocation=service['workLocation'], domain=service['domain'],
                                                     role=service['role'], skill=service['skill'], technology=service['technology'],
-                                                    experience=service['experience'], onsiteDaysPerWeek=service['onsiteDaysPerWeek'],
-                                                    remoteDaysPerWeek=service['remoteDaysPerWeek'])
+                                                    experience=service['experience'], masterAgreementTypeName=service['masterAgreementName'])
             services[service['serviceId']]= service_obj
         return services
 
@@ -179,7 +177,7 @@ def get_2a_ma_data():
 
 
 def get_4a_services():
-    sm_api = "http://ec2-54-145-132-89.compute-1.amazonaws.com:9198/api/v1/serviceManagement"
+    sm_api = "http://ec2-54-166-224-107.compute-1.amazonaws.com:9198/api/v1/serviceManagement"
     try:
         response = requests.get(sm_api)
         response.raise_for_status()  # Raise an exception for bad responses

@@ -419,3 +419,22 @@ db.define_table(
     Field('candidate', 'reference candidate'),
     Field('serviceId', 'integer')
 )
+
+
+db.define_table(
+    'employee',
+    Field('name', 'string'),
+    Field('role', 'string'),
+    Field('experience', 'integer'),
+    Field('provider', 'string')
+)
+
+db.define_table(
+    'service_request_offer',
+    Field('serviceId', 'integer'),
+    Field('masterAgreementTypeName', 'string'),
+    Field('employee', 'reference employee'),
+    Field('price', 'integer'),
+    Field('isAccepted', 'boolean'),
+)
+db.service_request_offer.employee.requires = IS_IN_DB(db, 'employee.id', '%(name)s | %(role)s | %(experience)s years')

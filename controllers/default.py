@@ -22,7 +22,7 @@ Access.buildAccessCache(db)
 
 helper=Helper(db, session)
 provider_dict = BuildAPI.buildApiDict()
-#service_requests = BuildAPI.buildServiceAgreementDict()
+all_service_requests = BuildAPI.buildServiceAgreementDict()
 agreements = BuildAPI.buildMADict()
 
 
@@ -267,6 +267,34 @@ def submit_price():
 
     redirect(URL('domains'))
     return dict()
+
+
+def service_requests():
+    all_sr = all_service_requests
+    return dict(all_sr=all_sr)
+
+
+
+def view_service_request():
+    provider = _get_provider()
+    serviceId = int(request.vars['serviceId'])
+    serviceInfo = all_service_requests[serviceId]
+
+    form = SQLFORM.factory(
+        Field('price', 'integer'),
+        Field('employee', 'reference employee',
+              requires=IS_IN_DB(db, 'employee.id',
+                                '%(provider)s | %(name)s | %(role)s | %(experience)s years'))
+    )
+    # Assuming you have a db object defined
+
+    if form.process().accepted:
+        db.service_request_offer.insert(serviceId= serviceInfo.serviceId, employee=form.vars.employee, price=form.vars.price, masterAgreementTypeName=serviceInfo.masterAgreementTypeName, isAccepted=None)
+        redirect(URL('view_service_request', vars=dict(serviceId=serviceId)))
+
+
+
+    return dict(serviceInfo=serviceInfo, form=form)
 
 def positions():
     return dict()

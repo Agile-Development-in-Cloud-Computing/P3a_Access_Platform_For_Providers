@@ -47,10 +47,11 @@ def agreement_offers_old():
 
 
 def agreement_offers():
-    # Assuming db is the DAL instance where you defined your table
+    """GET API FOR 2a"""
 
     # Group by roleName, masterAgreementTypeName, and domainId
     grouped_rows = db(db.role_offer).select(
+        db.role_offer.id,
         db.role_offer.roleName,
         db.role_offer.experienceLevel,
         db.role_offer.technologiesCatalog,
@@ -95,6 +96,7 @@ def agreement_offers():
             }
 
         aggregated_data[key]['provider'].append({
+            'offerId': row.id,
             'name': row.provider,
             'quotePrice': row.quotePrice,
             'isAccepted': row.isAccepted,
@@ -109,6 +111,52 @@ def agreement_offers():
     json_data = json.dumps(final_aggregated_data, indent=4)
 
     return json_data
+
+def post_ma_offer_response():
+    """POST API FROM 2a"""
+    is_accepted = bool(request.vars['isAccepted'])
+    offer_id = request.vars['offerId']
+
+    record = db(db.role_offer.id == offer_id).select().first()
+    record.update_record(isAccepted=is_accepted)
+    print(f'isAccepted: {is_accepted}, offerId: {offer_id}')
+
+    # Return a JSON response
+    return response.json({'status': 'success', 'message': 'Response Posted successfully'})
+
+
+
+def service_offers():
+    """GET API FOR 4a"""
+    rows = db(db.service_request_offer).select()
+
+    data_list = [{'offerId':row.id, 'serviceId':row.serviceId, 'masterAgreementTypeName':row.masterAgreementTypeName,'employee':{'employeeName':row.employee.name, 'employeeRole':row.employee.role, 'employeeExp':row.employee.experience},
+                  'price':row.price, 'isAccepted':row.isAccepted} for row in rows]
+
+    json_data = json.dumps(data_list)
+    return json_data
+
+# default.py
+
+
+def post_service_offer_response():
+    """POST API FROM 4a"""
+    is_accepted = bool(request.vars['isAccepted'])
+    offer_id = request.vars['offerId']
+
+    # Your logic here, e.g., save data to the database
+    record = db(db.service_request_offer.id==offer_id).select().first()
+    record.update_record(isAccepted=is_accepted)
+    # For demonstration purposes, let's just print the values
+    print(f'isAccepted: {is_accepted}, offerId: {offer_id}')
+
+    # Return a JSON response
+    return response.json({'status': 'success', 'message': 'Response Posted successfully'})
+
+
+
+
+
 
 
 
