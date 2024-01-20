@@ -20,5 +20,20 @@
     <br/>
     {{=form}}
 
+    <div>
+        <h2>Current Offers</h2>
+        <table class="table table-striped">
+            <tr><th>Employee</th><th>Role</th><th>Experience</th><th>Provider</th><th>Price</th><th>Status</th></tr>
+            {{for row in current_offers:}}
+            {{if row.employee.provider==provider:}}
+            <tr><td>{{=row.employee.name}}</td><td>{{=row.employee.role}}</td><td>{{=row.employee.experience}}</td>
+                <td>{{=row.employee.provider}}</td><td>{{=row.price}}</td>
+                <td>{{if row.isAccepted:}} Accepted {{elif row.isAccepted is None:}}Pending{{else:}}Rejected{{pass}}</td>
+            </tr>
+            {{pass}}
+            {{pass}}
+        </table>
+    </div>
+
 
 </div>

@@ -270,8 +270,9 @@ def submit_price():
 
 
 def service_requests():
+    provider=_get_provider()
     all_sr = all_service_requests
-    return dict(all_sr=all_sr)
+    return dict(all_sr=all_sr, helper=helper,provider=provider)
 
 
 
@@ -279,6 +280,8 @@ def view_service_request():
     provider = _get_provider()
     serviceId = int(request.vars['serviceId'])
     serviceInfo = all_service_requests[serviceId]
+
+    current_offers = db(db.service_request_offer.serviceId==serviceId).select()
 
     form = SQLFORM.factory(
         Field('price', 'integer'),
@@ -294,7 +297,7 @@ def view_service_request():
 
 
 
-    return dict(serviceInfo=serviceInfo, form=form)
+    return dict(serviceInfo=serviceInfo, form=form, current_offers=current_offers, provider=provider)
 
 def positions():
     return dict()

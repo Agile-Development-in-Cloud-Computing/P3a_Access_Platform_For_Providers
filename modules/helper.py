@@ -35,4 +35,6 @@ class Helper:
         elif row.isAccepted:
             return 'Accepted'
 
+    def get_sa_offer_count(self, serviceId):
+        return self.db(self.db.service_request_offer.serviceId==serviceId).count()
 
