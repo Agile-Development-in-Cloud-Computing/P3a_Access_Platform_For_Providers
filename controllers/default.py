@@ -6,19 +6,30 @@ from collections import defaultdict
 # -------------------------------------------------------------------------
 import datetime
 import sys
+from dataclasses import dataclass
 sys.path.append('/modules')
 
 # Now you can import your module
 from acl import Access
-# from api_builder import get_2a_provider_data, get_2a_ma_data
-
+from api_builder import get_2a_provider_data, get_2a_ma_data, BuildAPI
+from helper import Helper
 
 
 
 access=Access(db, session)
 Access.buildAccessCache(db)
+
+
+helper=Helper(db, session)
+provider_dict = BuildAPI.buildApiDict()
+all_service_requests = BuildAPI.buildServiceAgreementDict()
+agreements = BuildAPI.buildMADict()
+
+
 # ---- example index page ----
 def index():
+    if session.username:
+        redirect(URL('ma_details'))
     redirect(URL('WelCome'))
 
 
@@ -97,7 +108,7 @@ def login():
 
 def logout():
     session.username=None
-    redirect(URL('WelCome'))
+    redirect(URL('login'))
 
 def user_dashboard():
     userid = request.vars.userid
@@ -191,20 +202,112 @@ def delete_user():
     db(db.p_user.id==userid).delete()
     redirect(URL('user_dashboard'))
 
-def domain():
-    ma_data = get_2a_ma_data()
+
+
+def ma_details():
+    ma_data = BuildAPI.buildMAStatic()
     provider_data = get_2a_provider_data()
     ma_rows = []
     providers=[]
     domains = []
+    logged_in_provider = _get_provider()
     # data for super admin first
     ma_count = len(ma_data)
 
     provider_count = len(provider_data)
-    open_ma = db(db.masteragreementtype.ValidUntil>datetime.date.today()).count()
-    closed_ma = db(db.masteragreementtype.ValidUntil< datetime.date.today()).count()
-    return dict(ma_rows=ma_data, provider_count=provider_count, open_ma=open_ma, closed_ma=closed_ma, ma_count=ma_count)
+    open_ma = db(db.masteragreementtype.validUntil>datetime.date.today()).count()
+    closed_ma = db(db.masteragreementtype.validUntil< datetime.date.today()).count()
+    submitted_ma = db(db.masteragreementtype.provider == logged_in_provider).count()
+    return dict(ma_rows=ma_data, provider_count=provider_count, open_ma=open_ma, closed_ma=closed_ma, ma_count=ma_count,
+                access=access, submitted_ma=submitted_ma, helper=helper, provider=logged_in_provider)
 
+
+def master_agreement():
+    ma_key = request.vars['ma_key']
+    ma_dict = BuildAPI.buildMAStatic()
+    master_aggr = ma_dict[ma_key]
+    provider = _get_provider()
+
+
+    return dict(master_aggr=master_aggr, provider=provider)
+
+def domains():
+    provider_name = _get_provider()
+    ma_data = agreements
+    ma_key = request.vars['key']
+
+    rejected_offers = db((db.role_offer.isAccepted==False) & (db.role_offer.provider==provider_name)).count()
+    accepted_offers = db((db.role_offer.isAccepted==True) & (db.role_offer.provider==provider_name)).count()
+    submitted_offers = db(db.role_offer.provider==provider_name).count()
+    # Count of unique providers
+
+    if ma_key:
+        ma_data = {key: value for key, value in ma_data.items() if key[0] == ma_key}
+        rejected_offers = db((db.role_offer.isAccepted == False) & (db.role_offer.provider == provider_name) & (db.role_offer.masterAgreementTypeName==ma_key)).count()
+        accepted_offers = db((db.role_offer.isAccepted == True) & (db.role_offer.provider == provider_name) & (db.role_offer.masterAgreementTypeName==ma_key)).count()
+        submitted_offers = db((db.role_offer.masterAgreementTypeName==ma_key) & (db.role_offer.provider==provider_name)).count()
+    ma_s = [key[0] for key in ma_data.keys()]
+    ma_count = len(set(ma_s))
+    return dict(  provider=provider_name, helper=helper, pr_data=ma_data, ma_count=ma_count, rejected_offers=rejected_offers,
+                  submitted_offers=submitted_offers, accepted_offers=accepted_offers)
+
+def submit_price():
+    domainId = int(request.vars['domainId'])
+    role_name = request.vars['role_name']
+    provider = _get_provider()
+    price = int(request.vars['price'])
+    masterAgreementTypeName = request.vars['masterAgreement']
+    key = (masterAgreementTypeName, domainId, role_name)
+    role_info = agreements[key]
+
+    db.role_offer.insert(roleName=role_name, experienceLevel=role_info.experienceLevel, technologiesCatalog=role_info.technologiesCatalog,
+                         domainId=domainId, domainName= role_info.domainName, masterAgreementTypeId=role_info.masterAgreementTypeId,
+                         masterAgreementTypeName=masterAgreementTypeName, provider=provider,
+                         quotePrice=price)
+
+    redirect(URL('domains'))
+    return dict()
+
+
+def service_requests():
+    provider=_get_provider()
+    all_sr = all_service_requests
+    return dict(all_sr=all_sr, helper=helper,provider=provider)
+
+
+
+def view_service_request():
+    provider = _get_provider()
+    serviceId = int(request.vars['serviceId'])
+    serviceInfo = all_service_requests[serviceId]
+
+    current_offers = db(db.service_request_offer.serviceId==serviceId).select()
+
+    form = SQLFORM.factory(
+        Field('price', 'integer'),
+        Field('employee', 'reference employee',
+              requires=IS_IN_DB(db, 'employee.id',
+                                '%(provider)s | %(name)s | %(role)s | %(experience)s years'))
+    )
+    # Assuming you have a db object defined
+
+    if form.process().accepted:
+        db.service_request_offer.insert(serviceId= serviceInfo.serviceId, employee=form.vars.employee, price=form.vars.price, masterAgreementTypeName=serviceInfo.masterAgreementTypeName, isAccepted=None)
+        redirect(URL('view_service_request', vars=dict(serviceId=serviceId)))
+
+    return dict(serviceInfo=serviceInfo, form=form, current_offers=current_offers, provider=provider)
+
+def negotiate():
+    offerId = request.vars['offerId']
+    row = db(db.service_request_offer.id==offerId).select().first()
+
+    form=SQLFORM.factory(
+        Field('price'),
+        record=row, showid=False
+    )
+    if form.process().accepted:
+        row.update_record(price=form.vars.price, isAccepted=None)
+    return dict(row=row, form=form)
 
 def positions():
     return dict()
@@ -222,5 +325,27 @@ def Contact():
 def Register():
     return dict()
 
-def Roles():
-    return dict()
+
+
+def _get_provider():
+    try:
+        logged_in_user = db(db.p_user.Email == session.username).select().first()
+        provider_name = logged_in_user.provider
+        if provider_name is not None:
+            return provider_name
+        else:
+            return 'FRAUAS'
+    except:
+        raise Exception('No such user exists')
+
+def _did_provider_submit(ma_key, provider):
+    try:
+        row = db((db.masteragreementtype.masterAgreementTypeName == ma_key) & (db.masteragreementtype.provider == provider)).select().first()
+        if row:
+                if row.provider == provider:
+                    return True
+                else:
+                    return False
+    except:
+        raise Exception('The MA offer for this provider does not exist')
+

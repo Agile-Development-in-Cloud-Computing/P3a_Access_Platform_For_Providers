@@ -170,35 +170,38 @@ if configuration.get('scheduler.enabled'):
 
 # Define web2py models
 
-# contract table
-db.define_table(
-    'contract',
-    Field('UserOfferID', 'integer', 'reference useroffer'),
-    Field('ContractDate', 'datetime'),
-    Field('Status', 'string', length=50)
-)
 
-# evaluation table
-db.define_table(
-    'evaluation',
-    Field('UserID', 'integer', 'reference p_user'),
-    Field('ProviderID', 'integer', 'reference provider'),
-    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
-    Field('Rating', 'integer'),
-    Field('Comments', 'text')
-)
 
 # masteragreementtype table
 db.define_table(
     'masteragreementtype',
-    Field('Name', 'string', length=255),
-    Field('ValidFrom', 'date'),
-    Field('ValidUntil', 'date'),
-    Field('DailyRateIndicator', 'boolean'),
-    Field('Deadline', 'date'),
-    Field('TeamDeadline', 'date'),
-    Field('WorksContractDeadline', 'date'),
-    Field('GroupID', 'integer', 'reference pgroup')
+    Field('masterAgreementTypeId', 'integer'),
+    Field('masterAgreementTypeName', 'string'),
+    Field('validFrom', 'date'),
+    Field('validUntil', 'date'),
+    Field('dailyrateIndicator', 'string'),
+    Field('deadline', 'date'),
+    Field('teamdeadline', 'date'),
+    Field('workscontractdeadline', 'date'),
+    Field('provider', 'string'),
+    Field('quotePrice', 'integer'),
+    Field('isAccepted', 'boolean')
+)
+
+
+db.define_table(
+    'role_offer',
+    Field('roleName', 'string'),
+    Field('experienceLevel', 'string'),
+    Field('technologiesCatalog', 'string'),
+    Field('domainId', 'integer'),
+    Field('domainName', 'string'),
+    Field('masterAgreementTypeId', 'integer'),
+    Field('masterAgreementTypeName', 'string'),
+    Field('provider', 'string'),
+    Field('quotePrice', 'integer'),
+    Field('isAccepted', 'boolean'),
+    Field('offer_cycle', 'integer')
 )
 
 if db(db.masteragreementtype).count()==0:
@@ -226,48 +229,20 @@ if db(db.masteragreementtype).count()==0:
                                   WorksContractDeadline=datetime.date(year=2023, month=1, day=17))
 
 
-# negotiation table
-db.define_table(
-    'negotiation',
-    Field('UserOfferID', 'integer', 'reference useroffer'),
-    Field('ProposedPrice', 'decimal(10,2)'),
-    Field('NegotiatedPrice', 'decimal(10,2)'),
-    Field('Status', 'string', length=50)
-)
 
 # offer table
 db.define_table(
     'offer',
-    Field('ProviderID', 'integer', 'reference provider'),
-    Field('AgreementTypeID', 'integer', 'reference masteragreementtype'),
-    Field('OfferDate', 'datetime'),
-    Field('Status', 'string', length=50)
+    Field('provider', 'string'),
+    Field('domain_id', 'integer'),
+    Field('role', 'string'),
+    Field('price', 'integer'),
+    Field('offerDate', 'datetime', default=datetime.datetime.now()),
+    Field('mast_aggr', 'string',),
+    Field('status', 'string', length=50)
 )
 
-# pgroup table
-db.define_table(
-    'pgroup',
-    Field('Name', 'string', length=255),
-    Field('Description', 'text')
-)
 
-# provider table
-db.define_table(
-    'provider',
-    Field('Name', 'string', length=255),
-    Field('Address', 'string', length=255),
-    Field('ExistenceSince', 'date'),
-    Field('ValidFrom', 'date'),
-    Field('ValidUntil', 'date')
-)
-
-# requestcycle table
-db.define_table(
-    'requestcycle',
-    Field('ServiceRequestID', 'integer', 'reference servicerequest'),
-    Field('CycleNumber', 'integer'),
-    Field('Status', 'string', length=50)
-)
 
 # servicerequest table
 db.define_table(
@@ -366,19 +341,21 @@ if db(db.p_user).count()==0:
     db.p_user.insert(Username='lwright', first_name='Lucas', last_name='Wright', Password='Password25',
                      Email='lucaswright@example.com', Role='BasicUser')
 
-# useroffer table
+
 db.define_table(
-    'useroffer',
-    Field('UserID', 'integer', 'reference p_user'),
-    Field('OfferID', 'integer', 'reference offer'),
-    Field('IsChosen', 'boolean'),
-    Field('IsAccepted', 'boolean')
+    'employee',
+    Field('name', 'string'),
+    Field('role', 'string'),
+    Field('experience', 'integer'),
+    Field('provider', 'string')
 )
 
-# userprofile table
 db.define_table(
-    'userprofile',
-    Field('UserID', 'integer', 'reference p_user'),
-    Field('ServiceRequestID', 'integer', 'reference  '),
-    Field('ProfileData', 'text')
+    'service_request_offer',
+    Field('serviceId', 'integer'),
+    Field('masterAgreementTypeName', 'string'),
+    Field('employee', 'reference employee'),
+    Field('price', 'integer'),
+    Field('isAccepted', 'boolean'),
 )
+db.service_request_offer.employee.requires = IS_IN_DB(db, 'employee.id', '%(name)s | %(role)s | %(experience)s years')

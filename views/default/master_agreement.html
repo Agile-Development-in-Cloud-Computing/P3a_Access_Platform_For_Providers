@@ -1,0 +1,21 @@
+{{extend 'basic_layout.html'}}
+
+<div class="container bg-light" style="padding:20px;">
+    <br/>
+    <a class="btn btn-primary" href="{{=URL('ma_details')}}">Back</a>
+    <br/>
+    <br/>
+    <h1>Master Agreement : {{=master_aggr.masterAgreementTypeName}}</h1>
+    <table class="table" border="1">
+        <tr><th>Master Agreement ID</th><td>{{=master_aggr.masterAgreementTypeId}}</td></tr>
+        <tr><th>Master Agreement Name</th><td>{{=master_aggr.masterAgreementTypeName}}</td></tr>
+        <tr><th>Valid From</th><td>{{=master_aggr.validFrom}}</td></tr>
+        <tr><th>Valid Until</th><td>{{=master_aggr.validUntil}}</td></tr>
+        <tr><th>Daily Rate Indicator</th><td>{{=master_aggr.dailyrateIndicator}}</td></tr>
+        <tr><th>Deadline</th><td>{{=master_aggr.deadline}}</td></tr>
+        <tr><th>Work Contract Deadline</th><td>{{=master_aggr.teamdeadline}}</td></tr>
+    </table>
+    <br/>
+    <a class="btn btn-outline-primary" href="{{=URL('domains', vars=dict(key=master_aggr.masterAgreementTypeName))}}">Show Roles</a>
+
+</div>

@@ -2,7 +2,7 @@
 
   <div style="height: 20%; border-radius: 5px; display: flex; align-items: center;">
     <div style="height: 20%;  border-radius: 5px;">
-      <div style="width: 100%; height: 100%; color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{=ma['masterAgreementTypeName']}}</div>
+      <div style="width: 100%; height: 100%; color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word">{{=key}}</div>
     </div>
 
   </div>
@@ -13,7 +13,7 @@
       <div style="width: 10px; height: 10px; background: #7DE713; border-radius: 9999px;"></div>
     </div>
     <div style="display: flex; align-items: center; margin-left: 10px; border-radius: 5px;">
-      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Starts on: {{=ma['validFrom']}}</div>
+      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Starts on: {{=value.validFrom}}</div>
     </div>
   </div>
 
@@ -23,18 +23,23 @@
       <div style="width: 10px; height: 10px; background: #E73913; border-radius: 9999px;"></div>
     </div>
     <div style="display: flex; align-items: center; margin-left: 10px; border-radius: 5px;">
-      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Expiring on: {{=ma['validUntil']}}</div>
+      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Expiring on: {{=value.validUntil}}</div>
+    </div>
+  </div>
+  <div style="height: 20%; border-radius: 5px; display: flex; align-items: center;">
+    <div style="width: 10px; border-radius: 5px;">
+      <div style="width: 10px; height: 10px; background: black; border-radius: 9999px;"></div>
+    </div>
+    <div style="display: flex; align-items: center; margin-left: 10px; border-radius: 5px;">
+      <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word;">Status: {{if helper.check_ma_status(provider, key):}} Submitted {{else:}}Open {{pass}}</div>
     </div>
   </div>
   
-  
-  <button onclick="window.location.href='your_target_page.html'" style="height: 20%; border-radius: 5px; display: flex; align-items: center; background: #52DEBD; border: none; cursor: pointer; outline: none;">
-    <div style="width: 90%; height: 100%; border-radius: 5px;">
-        <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 400; word-wrap: break-word; padding-top: 7px; padding-left: 5px;">Click to Process &#8594;</div>
+
+  <a href="{{=URL('master_agreement', vars=dict(ma_key=key))}}" style="height: 20%; border-radius: 5px; display: flex; align-items: center; background: #52DEBD; border: none; cursor: pointer; outline: none;">
+    <div class="text-center" style="width: 90%; height: 100%; border-radius: 5px;">
+        <div style="color: black; font-size: 20px; font-family: Inter; font-weight: 600; word-wrap: break-word;">Click to Process &#8594;</div>
     </div>
-    <div style="width: 10%; height: 100%; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
-        <p style="width: 10px; height: 1px; font-size: 40px; font-weight: bold; margin: 15; padding-bottom: 30px; padding-right: 45px;">&#8594;</p>
-    </div>
-</button>
+</a>
 
 </div>
