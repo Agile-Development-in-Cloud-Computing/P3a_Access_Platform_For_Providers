@@ -20,3 +20,6 @@ class Access:
         return self.session.username in Access._superadmins
     def isAdmin(self):
         return self.session.username in Access._admins
+
+    def isBasicUser(self):
+        return self.session.username in Access._basicUsers

@@ -38,3 +38,13 @@ class Helper:
     def get_sa_offer_count(self, serviceId):
         return self.db(self.db.service_request_offer.serviceId==serviceId).count()
 
+    def get_sa_offer_status(self, employee, serviceId):
+        return self.db((self.db.service_request_offer.employee==employee) & (self.db.service_request_offer.serviceId==serviceId)).select().first()
+
+
+    def check_emp_accepted(self, offerId):
+        row = self.db(self.db.employee_accept.offerId==offerId).select().first()
+        if row:
+            return row.isAccepted
+        else:
+            return False

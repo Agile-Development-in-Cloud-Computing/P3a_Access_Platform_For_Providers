@@ -10,7 +10,7 @@ from helper import Helper
 helper=Helper(db, session)
 
 response.headers['Access-Control-Allow-Origin'] = '*'
-provider_dict = BuildAPI.buildApiDict()
+
 
 def get_g3a_data():
     main_dict = defaultdict()
@@ -114,9 +114,9 @@ def agreement_offers():
 
 def post_ma_offer_response():
     """POST API FROM 2a"""
-    is_accepted = bool(request.vars['isAccepted'])
+    is_accepted_str = request.vars['isAccepted'].lower()
     offer_id = request.vars['offerId']
-
+    is_accepted = is_accepted_str == 'true'
     record = db(db.role_offer.id == offer_id).select().first()
     record.update_record(isAccepted=is_accepted)
     print(f'isAccepted: {is_accepted}, offerId: {offer_id}')
@@ -131,7 +131,7 @@ def service_offers():
     rows = db(db.service_request_offer).select()
 
     data_list = [{'offerId':row.id, 'serviceId':row.serviceId, 'masterAgreementTypeName':row.masterAgreementTypeName,'employee':{'employeeName':row.employee.name, 'employeeRole':row.employee.role, 'employeeExp':row.employee.experience},
-                  'price':row.price, 'isAccepted':row.isAccepted} for row in rows]
+                  'suggestion': row.suggestion, 'price':row.price, 'isAccepted':row.isAccepted} for row in rows]
 
     json_data = json.dumps(data_list)
     return json_data
@@ -141,9 +141,10 @@ def service_offers():
 
 def post_service_offer_response():
     """POST API FROM 4a"""
-    is_accepted = bool(request.vars['isAccepted'])
+    is_accepted_str = request.vars['isAccepted'].lower()
     offer_id = request.vars['offerId']
 
+    is_accepted = is_accepted_str=='true'
     # Your logic here, e.g., save data to the database
     record = db(db.service_request_offer.id==offer_id).select().first()
     record.update_record(isAccepted=is_accepted)

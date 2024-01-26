@@ -16,6 +16,7 @@
         <tr><th>Skill</th><td>{{=serviceInfo.skill}}</td></tr>
         <tr><th>Technology</th><td>{{=serviceInfo.technology}}</td></tr>
         <tr><th>Experience</th><td>{{=serviceInfo.experience}}</td></tr>
+
     </table>
     <br/>
     {{=form}}
@@ -23,10 +24,11 @@
     <div>
         <h2>Current Offers</h2>
         <table class="table table-striped">
-            <tr><th>Employee</th><th>Role</th><th>Experience</th><th>Provider</th><th>Price</th><th>Status</th></tr>
+            <tr><th>Employee</th><th>Role</th><th>Experience</th><th>Suggestion</th><th>Provider</th><th>Price</th><th>Status</th></tr>
             {{for row in current_offers:}}
             {{if row.employee.provider==provider:}}
             <tr><td>{{=row.employee.name}}</td><td>{{=row.employee.role}}</td><td>{{=row.employee.experience}}</td>
+                <td>{{=row.suggestion}}</td>
                 <td>{{=row.employee.provider}}</td><td>{{=row.price}}</td>
                 <td>{{if row.isAccepted:}} Accepted {{elif row.isAccepted is None:}}Pending{{else:}}Rejected <a href="{{=URL('negotiate', vars=dict(offerId=row.id))}}" class="btn btn-sm btn-warning">Negotiate</a>{{pass}}</td>
             </tr>

@@ -357,5 +357,13 @@ db.define_table(
     Field('employee', 'reference employee'),
     Field('price', 'integer'),
     Field('isAccepted', 'boolean'),
+    Field('suggestion', 'string')
 )
 db.service_request_offer.employee.requires = IS_IN_DB(db, 'employee.id', '%(name)s | %(role)s | %(experience)s years')
+
+db.define_table(
+    'employee_accept',
+    Field('offerId', 'reference service_request_offer'),
+    Field('isAccepted', 'boolean')
+)
+

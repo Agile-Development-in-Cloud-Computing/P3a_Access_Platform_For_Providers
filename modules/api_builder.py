@@ -57,37 +57,6 @@ class MasterAgreementItem:
 
 class BuildAPI:
     @staticmethod
-    def buildApiDict():
-        json_data = get_2a_provider_data()
-        print('json_data', json_data, type(json_data))
-        role_dict = {}
-        for provider_data in json_data:
-            provider_name = provider_data['providerName']
-
-            for domain_data in provider_data['domains']:
-                domain_id = domain_data['id']
-                domain_name = domain_data['domainName']
-
-                for role_data in domain_data['roles']:
-                    role_name = role_data['roleName']
-                    role_key = (provider_name, domain_id, role_name)
-
-                    # Create Role object
-                    role_object = Role(
-                        providerName=provider_name,
-                        domainId=domain_id,
-                        domainName=domain_name,
-                        roleName=role_name,
-                        experienceLevel=role_data['experienceLevel'],
-                        technologiesCatalog=role_data['technologiesCatalog'],
-                        mastAggr=provider_data['masterAgreementTypeId']
-                    )
-
-                    # Add to the dictionary
-                    role_dict[role_key] = role_object
-        return role_dict
-
-    @staticmethod
     def buildServiceAgreementDict():
         json_data = get_4a_services()
         services = {}
@@ -150,10 +119,10 @@ class BuildAPI:
 
 
 def get_date_from_string(dateString):
-    return datetime.datetime.strptime(dateString, "%Y-%m-%d").date()
+    return datetime.datetime.strptime(dateString, "%Y-%d-%m").date()
 
 def get_2a_provider_data():
-    provider_api = "http://ec2-16-171-169-38.eu-north-1.compute.amazonaws.com:5000/api/providers"
+    provider_api = "http://ec2-13-49-44-175.eu-north-1.compute.amazonaws.com:5000/api/providers"
     try:
         response = requests.get(provider_api)
         response.raise_for_status()  # Raise an exception for bad responses
@@ -164,7 +133,7 @@ def get_2a_provider_data():
 
 
 def get_2a_ma_data():
-    ma_api = "http://ec2-16-171-169-38.eu-north-1.compute.amazonaws.com:5000/api/mastertype/all"
+    ma_api = "http://ec2-13-49-44-175.eu-north-1.compute.amazonaws.com:5000/api/mastertype/all"
     try:
         response = requests.get(ma_api)
         response.raise_for_status()  # Raise an exception for bad responses

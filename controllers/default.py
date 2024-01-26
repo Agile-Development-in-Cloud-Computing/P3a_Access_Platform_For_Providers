@@ -21,7 +21,7 @@ Access.buildAccessCache(db)
 
 
 helper=Helper(db, session)
-provider_dict = BuildAPI.buildApiDict()
+
 all_service_requests = BuildAPI.buildServiceAgreementDict()
 agreements = BuildAPI.buildMADict()
 
@@ -100,6 +100,8 @@ def login():
         if user and user.Password == form.vars.password:
             session.username = user.Email  # Use 'Email' instead of 'Username'
             user.update_record(LastLoginDate=datetime.datetime.now())
+            if access.isBasicUser():
+                redirect(URL('employee_dashboard'))
             redirect(URL('user_dashboard'))  # Redirect to dashboard after successful login
         response.flash = 'Invalid credentials'
 
@@ -110,7 +112,25 @@ def logout():
     session.username=None
     redirect(URL('login'))
 
+def employee_dashboard():
+    emp = db(db.p_user.Email==session.username).select().first()
+    name=emp.first_name+' '+emp.last_name
+    emp_details = db(db.employee.name==name).select().first()
+    emp_offers= db(db.service_request_offer.employee==emp_details.id).select()
+    offers =[all_service_requests[r.serviceId] for r in emp_offers]
+    return dict(emp_details=emp_details, offers=offers, helper=helper)
+
+def employee_accept_offer():
+    is_accepted_str = request.vars['isAccepted'].lower()
+    offer_id = request.vars['offerId']
+
+    is_accepted = is_accepted_str == 'true'
+    db.employee_accept.insert(offerId=offer_id, isAccepted=is_accepted)
+    redirect(URL('employee_dashboard'))
+
 def user_dashboard():
+    if access.isBasicUser():
+        redirect(URL('employee_dashboard'))
     userid = request.vars.userid
     try:
         logged_in_user = db(db.p_user.Email==session.username).select().first()
@@ -205,6 +225,8 @@ def delete_user():
 
 
 def ma_details():
+    if access.isBasicUser():
+        redirect(URL('employee_dashboard'))
     ma_data = BuildAPI.buildMAStatic()
     provider_data = get_2a_provider_data()
     ma_rows = []
@@ -232,6 +254,8 @@ def master_agreement():
     return dict(master_aggr=master_aggr, provider=provider)
 
 def domains():
+    if access.isBasicUser():
+        redirect(URL('employee_dashboard'))
     provider_name = _get_provider()
     ma_data = agreements
     ma_key = request.vars['key']
@@ -270,6 +294,8 @@ def submit_price():
 
 
 def service_requests():
+    if access.isBasicUser():
+        redirect(URL('employee_dashboard'))
     provider=_get_provider()
     all_sr = all_service_requests
     return dict(all_sr=all_sr, helper=helper,provider=provider)
@@ -287,12 +313,14 @@ def view_service_request():
         Field('price', 'integer'),
         Field('employee', 'reference employee',
               requires=IS_IN_DB(db, 'employee.id',
-                                '%(provider)s | %(name)s | %(role)s | %(experience)s years'))
+                                '%(provider)s | %(name)s | %(role)s | %(experience)s years')),
+        Field('suggestion', 'string')
     )
     # Assuming you have a db object defined
 
     if form.process().accepted:
-        db.service_request_offer.insert(serviceId= serviceInfo.serviceId, employee=form.vars.employee, price=form.vars.price, masterAgreementTypeName=serviceInfo.masterAgreementTypeName, isAccepted=None)
+        db.service_request_offer.insert(serviceId= serviceInfo.serviceId, employee=form.vars.employee, price=form.vars.price, masterAgreementTypeName=serviceInfo.masterAgreementTypeName, isAccepted=None,
+                                        suggestion=form.vars.suggestion)
         redirect(URL('view_service_request', vars=dict(serviceId=serviceId)))
 
     return dict(serviceInfo=serviceInfo, form=form, current_offers=current_offers, provider=provider)
